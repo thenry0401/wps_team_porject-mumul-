@@ -1,4 +1,4 @@
-FROM        mulmul_ubuntu
+FROM        lcgkiller/mulmul
 MAINTAINER  dev@azelf.com
 
 ENV LANG C.UTF-8
@@ -22,8 +22,7 @@ RUN         ln -sf /etc/nginx/sites-available/nginx-app.conf /etc/nginx/sites-en
 
 
 # collectstatic 실행
-RUN  /root/.pyenv/versions/mulmul/bin/python /srv/mulmul/django_app/manage.py collectstatic --settings=config.settings.deploy --noinput
-
+#RUN  /root/.pyenv/versions/deploy_eb_docker/bin/python /srv/deploy_eb_docker/django_app/manage.py collectstatic --settings=config.settings.deploy --noinput
 
 CMD         supervisord -n
 EXPOSE      80 8000

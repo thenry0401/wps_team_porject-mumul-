@@ -33,6 +33,7 @@ RUN         pyenv virtualenv 3.6.1 mulmul
 RUN         /root/.pyenv/versions/mulmul/bin/pip install uwsgi
 
 # Nginx install
+RUN         apt-get -y update
 RUN         apt-get -y install nginx
 
 RUN         apt-get -y install supervisor
