@@ -59,12 +59,10 @@ INSTALLED_APPS = [
     'post',
 ]
 
-SITE_ID = 1
 
 # django-allauth
 INSTALLED_APPS += [
     # The following apps are required:
-    'django.contrib.auth',
     'django.contrib.sites',
 
     'allauth',
@@ -72,8 +70,11 @@ INSTALLED_APPS += [
     'allauth.socialaccount',
 
     # ... include the providers you want to enable:
-    'allauth.socialaccount.providers.facebook'
+    'allauth.socialaccount.providers.facebook',
 ]
+
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
