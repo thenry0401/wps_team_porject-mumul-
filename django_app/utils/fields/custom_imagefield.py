@@ -21,5 +21,5 @@ class CustomImageField(ImageField):
     def __init__(self, *args, **kwargs):
 
         # 키워드 인자를 pop을 통해 없애버린다.
-        self.static_image_path = kwargs.pop('default_static_image', 'images/no_image.png')
+        self.static_image_path = kwargs.pop('default_static_image', 'images/no_profile_image.jpg')
         super().__init__(*args, **kwargs)
