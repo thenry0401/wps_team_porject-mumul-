@@ -18,7 +18,7 @@ class MyUser(AbstractUser):
         (USER_TYPE_FACEBOOK, 'Facebook'),
     )
 
-    user_type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES)
+    user_type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES, default='D')
     nickname = models.CharField(max_length=14, null=True, blank=True)
     email = models.EmailField(blank=True, null=True)
     address = models.CharField(max_length=100, blank=True)
