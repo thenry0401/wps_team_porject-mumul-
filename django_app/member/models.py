@@ -11,6 +11,7 @@ class UserManager(BaseUserManager):
 
 
 class MyUser(AbstractUser):
+<<<<<<< HEAD
     USER_TYPE_DJANGO = 'D'
     USER_TYPE_FACEBOOK = 'F'
     USER_TYPE_CHOICES = (
@@ -30,3 +31,8 @@ class MyUser(AbstractUser):
 
     def __str__(self):
         return self.nickname or self.username
+=======
+    username = models.CharField(max_length=30)
+    profile_image = models.ImageField(upload="profile_img")
+    email = models.EmailField(unique=True, blank=True)
+>>>>>>> 224194c67602fa5fa442be0c718cfe86ca6ced05
