@@ -3,6 +3,12 @@ from django.db import models
 from config import settings
 
 
+__all__ = (
+    'Post',
+    'PostLike',
+)
+
+
 class Post(models.Model):
     author = models.CharField(max_length=30)
     title = models.CharField(max_length=30)
@@ -41,13 +47,13 @@ class Post(models.Model):
     category = models.CharField(max_length=30, choices=CATEGORY_TYPE_CHOICES)
 
     # 거래방식 선택
-    EXCHANGE_TYPE_DIRECT = 'd'
-    EXCHANGE_TYPE_PARCEL = 'p'
-    EXCHANGE_TYPE_CHOICES = (
-        (EXCHANGE_TYPE_DIRECT, 'Direct'),
-        (EXCHANGE_TYPE_PARCEL, 'Parcel'),
+    TRADING_TYPE_DIRECT = 'd'
+    TRADING_TYPE_PARCEL = 'p'
+    TRADING_TYPE_CHOICES = (
+        (TRADING_TYPE_DIRECT, 'Direct'),
+        (TRADING_TYPE_PARCEL, 'Parcel'),
     )
-    exchange_type = models.CharField(max_length=30, choices=EXCHANGE_TYPE_CHOICES)
+    trading_type = models.CharField(max_length=30, choices=TRADING_TYPE_CHOICES)
 
 
 class PostLike(models.Model):

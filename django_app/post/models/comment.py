@@ -3,6 +3,10 @@ from django.db import models
 from config import settings
 from post.models import Post
 
+__all__ = (
+    'Comment',
+)
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Post)
