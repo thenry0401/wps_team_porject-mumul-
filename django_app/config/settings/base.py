@@ -64,7 +64,8 @@ INSTALLED_APPS = [
 ]
 
 
-# django-allauth
+######### djang-allauth configuration start#########
+
 INSTALLED_APPS += [
     # The following apps are required:
     'django.contrib.sites',
@@ -75,7 +76,9 @@ INSTALLED_APPS += [
 
     # ... include the providers you want to enable:
     'allauth.socialaccount.providers.facebook',
+
 ]
+
 FACEBOOK_APP_ID ='285502471913589'
 
 SITE_ID = 1
@@ -110,6 +113,19 @@ SOCIALACCOUNT_PROVIDERS = \
         'VERSION': 'v2.4'}
      }
 
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+
+
+######### djang-allauth configuration end#########
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -142,14 +158,6 @@ TEMPLATES = [
     },
 ]
 
-
-AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
-
-    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
 
 
 # Password validation
