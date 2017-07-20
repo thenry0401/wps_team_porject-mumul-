@@ -14,12 +14,28 @@ class UserManager(DefaultUserManager):
         user.save()
         return user
 
+    def get_or_create_naver_user(self, user_pk, extra_data):
+        print(extra_data)
+        user = User.objects.get(pk=user_pk)
+        user.username = extra_data['name']
+        user.nickname = extra_data['nickname']
+        user.email = extra_data['email']
+        user.first_name = extra_data['name'][0]
+        user.last_name = extra_data['name'][1:]
+        user.profile_image = extra_data['profile_image']
+        user.user_type = "N"
+        user.save()
+
+        return user
+
 class User(AbstractUser):
     USER_TYPE_DJANGO = 'D'
     USER_TYPE_FACEBOOK = 'F'
+    USER_TYPE_NAVER = 'N'
     USER_TYPE_CHOICES = (
         (USER_TYPE_DJANGO, 'Django'),
         (USER_TYPE_FACEBOOK, 'Facebook'),
+        (USER_TYPE_NAVER, 'Naver'),
     )
 
     user_type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES, default='D')

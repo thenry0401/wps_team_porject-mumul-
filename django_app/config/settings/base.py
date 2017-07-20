@@ -76,7 +76,7 @@ INSTALLED_APPS += [
 
     # ... include the providers you want to enable:
     'allauth.socialaccount.providers.facebook',
-
+    'allauth.socialaccount.providers.naver',
 ]
 
 FACEBOOK_APP_ID ='285502471913589'
@@ -110,7 +110,7 @@ SOCIALACCOUNT_PROVIDERS = \
         'EXCHANGE_TOKEN': True,
         'LOCALE_FUNC': lambda request: 'kr_KR',
         'VERIFIED_EMAIL': False,
-        'VERSION': 'v2.4'}
+        'VERSION': 'v2.4'},
      }
 
 
