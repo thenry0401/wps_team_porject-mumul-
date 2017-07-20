@@ -1,17 +1,19 @@
-from django.conf import settings
-from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager as DefaultUserManager
 from django.db import models
 
 # Create your models here.
 from utils.fields.custom_imagefield import CustomImageField
 
-class UserManager(BaseUserManager):
-    pass
 
+class UserManager(DefaultUserManager):
 
-class MyUser(AbstractUser):
-<<<<<<< HEAD
+    def get_or_create_facebook_user(self, user_pk):
+        user = User.objects.get(pk=user_pk)
+        user.user_type = user.USER_TYPE_FACEBOOK
+        user.save()
+        return user
+
+class User(AbstractUser):
     USER_TYPE_DJANGO = 'D'
     USER_TYPE_FACEBOOK = 'F'
     USER_TYPE_CHOICES = (
@@ -29,10 +31,9 @@ class MyUser(AbstractUser):
         default_static_image='',
     )
 
+    # 위에서 커스터마이징한 UserManager를 사용할 수 있게 함.
+    objects = UserManager()
+
     def __str__(self):
         return self.nickname or self.username
-=======
-    username = models.CharField(max_length=30)
-    profile_image = models.ImageField(upload="profile_img")
-    email = models.EmailField(unique=True, blank=True)
->>>>>>> 224194c67602fa5fa442be0c718cfe86ca6ced05
+

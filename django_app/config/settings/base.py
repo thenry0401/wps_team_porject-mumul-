@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 import json
 import os
+
+
 type(list)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
@@ -44,7 +46,7 @@ ALLOWED_HOSTS = []
 
 
 # 유저모델
-AUTH_USER_MODEL = 'member.MyUser'
+AUTH_USER_MODEL = 'member.User'
 
 # Application definition
 INSTALLED_APPS = [
@@ -54,6 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_extensions',
 
     'member',
     'post',
@@ -72,13 +76,39 @@ INSTALLED_APPS += [
     # ... include the providers you want to enable:
     'allauth.socialaccount.providers.facebook',
 ]
+FACEBOOK_APP_ID ='285502471913589'
 
 SITE_ID = 1
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 LOGIN_REDIRECT_URL = "/"
 ACCOUNT_AUTHENTICATED_LOGOUT_REDIRECTS = True
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+
+SOCIALACCOUNT_ADAPTER = 'member.views.SocialAccountAdapter'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SOCIALACCOUNT_PROVIDERS = \
+    {'facebook':
+       {'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile', 'user_friends'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+            'updated_time'],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': lambda request: 'kr_KR',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.4'}
+     }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

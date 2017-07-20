@@ -1,14 +1,19 @@
-from allauth.account.adapter import DefaultAccountAdapter
-from django.shortcuts import render, redirect
-
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 # Create your views here.
-class AccountAdapter(DefaultAccountAdapter):
-    def get_login_redirect_url(self, request):
-        return redirect("base:index")
+from django.contrib.auth import get_user_model
 
-    def get_logout_redirect_url(self, request):
-        return redirect("base:index")
+User = get_user_model()
 
-def sign_up(request):
-    return render(request, 'account:account_signup')
+class SocialAccountAdapter(DefaultSocialAccountAdapter):
+    def save_user(self, request, sociallogin, form=None):
+        """
+        This is called when saving user via allauth registration.
+        We override this to set additional data on user object.
+        """
+
+        user = super(SocialAccountAdapter, self).save_user(request, sociallogin, form)
+        User.objects.get_or_create_facebook_user(user_pk=user.pk)
+        # url = sociallogin.account.get_avatar_url() # 페이스북 프로필 이미지 획득 URL
+
+        return user
