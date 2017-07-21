@@ -89,6 +89,7 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 
 SOCIALACCOUNT_ADAPTER = 'member.views.SocialAccountAdapter'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ACCOUNT_UNIQUE_EMAIL = False
 
 SOCIALACCOUNT_PROVIDERS = \
     {'facebook':

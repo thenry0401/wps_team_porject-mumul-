@@ -8,12 +8,14 @@ from utils.fields.custom_imagefield import CustomImageField
 class UserManager(DefaultUserManager):
 
     # 페이스북으로 가입하면 user_type을 F(Facebook)으로 지정한다.
-    def get_or_create_facebook_user(self, user_pk):
+    def get_or_create_facebook_user(self, user_pk, profile_url):
         user = User.objects.get(pk=user_pk)
         user.user_type = user.USER_TYPE_FACEBOOK
+        user.profile_image = profile_url
         user.save()
         return user
 
+    # 네이버로 가입하면 user_type을 N(Naver)으로 지정한다. 그외에 커스텀 저장을 한다.
     def get_or_create_naver_user(self, user_pk, extra_data):
         print(extra_data)
         user = User.objects.get(pk=user_pk)
