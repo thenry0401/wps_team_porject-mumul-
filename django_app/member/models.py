@@ -1,18 +1,39 @@
+import re
+from urllib.request import urlopen
+
+import requests
 from django.contrib.auth.models import AbstractUser, UserManager as DefaultUserManager
+from django.core.files import File
+from django.core.files.base import ContentFile
+from django.core.files.temp import NamedTemporaryFile
 from django.db import models
 
 # Create your models here.
+from requests import request, HTTPError
+
 from utils.fields.custom_imagefield import CustomImageField
 
 
 class UserManager(DefaultUserManager):
 
     # 페이스북으로 가입하면 user_type을 F(Facebook)으로 지정한다.
-    def get_or_create_facebook_user(self, user_pk, profile_url):
+    def get_or_create_facebook_user(self, user_pk, extra_data, profile_url):
+        print(extra_data)
         user = User.objects.get(pk=user_pk)
         user.user_type = user.USER_TYPE_FACEBOOK
         user.profile_image = profile_url
         user.save()
+
+        # 프로필 이미지를 저장합니다.
+        try:
+            response = request('GET', profile_url, params={'type' : 'large'})
+            response.raise_for_status()
+        except HTTPError:
+            pass
+        else:
+            temp_file = NamedTemporaryFile(delete=False)
+            user.profile_image.save('{0}_{1}_social_facebook.jpg'.format(extra_data['id'], user.username), ContentFile(response.content))
+            temp_file.write(response.content)
         return user
 
     # 네이버로 가입하면 user_type을 N(Naver)으로 지정한다. 그외에 커스텀 저장을 한다.

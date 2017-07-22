@@ -88,7 +88,7 @@ ACCOUNT_AUTHENTICATED_LOGOUT_REDIRECTS = True
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 
 SOCIALACCOUNT_ADAPTER = 'member.views.SocialAccountAdapter'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_UNIQUE_EMAIL = False
 
 SOCIALACCOUNT_PROVIDERS = \
@@ -110,7 +110,7 @@ SOCIALACCOUNT_PROVIDERS = \
             'updated_time'],
         'EXCHANGE_TOKEN': True,
         'LOCALE_FUNC': lambda request: 'kr_KR',
-        'VERIFIED_EMAIL': False,
+        'VERIFIED_EMAIL': True,
         'VERSION': 'v2.4'},
      }
 
