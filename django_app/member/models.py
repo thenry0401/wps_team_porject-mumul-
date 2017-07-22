@@ -1,9 +1,4 @@
-import re
-from urllib.request import urlopen
-
-import requests
 from django.contrib.auth.models import AbstractUser, UserManager as DefaultUserManager
-from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.files.temp import NamedTemporaryFile
 from django.db import models
@@ -22,7 +17,6 @@ class UserManager(DefaultUserManager):
         user = User.objects.get(pk=user_pk)
         user.user_type = user.USER_TYPE_FACEBOOK
         user.profile_image = profile_url
-        user.save()
 
         # 프로필 이미지를 저장합니다.
         try:
@@ -34,6 +28,9 @@ class UserManager(DefaultUserManager):
             temp_file = NamedTemporaryFile(delete=False)
             user.profile_image.save('{0}_{1}_social_facebook.jpg'.format(extra_data['id'], user.username), ContentFile(response.content))
             temp_file.write(response.content)
+
+        user.save()
+
         return user
 
     # 네이버로 가입하면 user_type을 N(Naver)으로 지정한다. 그외에 커스텀 저장을 한다.

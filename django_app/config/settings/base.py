@@ -78,8 +78,8 @@ INSTALLED_APPS += [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.naver',
 ]
-
-FACEBOOK_APP_ID ='285502471913589'
+config_secret_deploy = json.loads(open(CONFIG_SECRET_DEPLOY_FILE).read())
+FACEBOOK_APP_ID = config_secret_deploy['facebook']['SOCIAL_AUTH_FACEBOOK_KEY']
 
 SITE_ID = 1
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
@@ -125,7 +125,7 @@ AUTHENTICATION_BACKENDS = (
 
 
 
-######### djang-allauth configuration end#########
+######### djang-allauth configuration end #########
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
