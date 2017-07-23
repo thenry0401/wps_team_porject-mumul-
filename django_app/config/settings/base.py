@@ -58,7 +58,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_extensions',
-    'rest_framework',
+    'rest_framework',           # django-restframework 라이브러리
+    'rest_framework.authtoken', # django-rest-allauth 라이브러리
+    'rest_auth',                # django-rest-allauth 라이브러리
 
     'member',
     'post',
