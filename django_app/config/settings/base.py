@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import json
 import os
 
-
-type(list)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -61,6 +59,7 @@ INSTALLED_APPS = [
     'rest_framework',           # django-restframework 라이브러리
     'rest_framework.authtoken', # django-rest-allauth 라이브러리
     'rest_auth',                # django-rest-allauth 라이브러리
+    'rest_auth.registration',   # django-rest-allauth 라이브러리
 
     'member',
     'post',
@@ -126,9 +125,17 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-
-
 ######### djang-allauth configuration end #########
+
+
+
+######### django-rest-auth configuration start #########
+
+    # REST-AUTH 에서 로그인 시리얼 라이저는 커스텀(email 필드 제거)한 시리얼 라이절르 사용합니다.
+REST_AUTH_SERIALIZERS = {
+    'LOGIN_SERIALIZER': 'member.serializers.user_serializers.UserLoginSerializer', }
+
+######### django-rest-auth configuration end #########
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

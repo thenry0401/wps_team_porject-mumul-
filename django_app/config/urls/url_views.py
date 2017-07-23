@@ -24,8 +24,6 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^accounts/', include('allauth.urls'), name='account'),
     url(r'^admin/', admin.site.urls),
-
-
 ]
 
 # /static/에 대한 요청을 STATIC_ROOT 경로의 파일에서 찾는다

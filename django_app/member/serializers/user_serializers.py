@@ -1,9 +1,15 @@
+import rest_auth
+from rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
+
 from ..models import User
 
 __all__ = (
     'UserSerializer',
+    'UserCreationSerializer',
+    # 'UserLoginSerializer',
 )
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'user_type',
         )
+
 
 class UserCreationSerializer(serializers.Serializer):
     username = serializers.CharField(
@@ -38,3 +45,16 @@ class UserCreationSerializer(serializers.Serializer):
             password=self.validated_data.get('password1', ''),
         )
         return user
+
+
+class UserLoginSerializer(rest_auth.serializers.LoginSerializer):
+
+    # rest-auth 내 LoginSerializer에서 일반 로그인은 email 필드를 제거
+    def get_fields(self):
+        fields = super(LoginSerializer, self).get_fields()
+        del fields['email']
+        return fields
+
+
+
+
