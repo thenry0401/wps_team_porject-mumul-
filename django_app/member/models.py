@@ -25,7 +25,7 @@ class UserManager(DefaultUserManager):
         except HTTPError:
             pass
         else:
-            temp_file = NamedTemporaryFile(delete=False)
+            temp_file = NamedTemporaryFile(delete=False) # 임시 파일을 하나 생성
             user.profile_image.save('{0}_{1}_social_facebook.jpg'.format(extra_data['id'], user.username), ContentFile(response.content))
             temp_file.write(response.content)
 
