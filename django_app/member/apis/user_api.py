@@ -6,7 +6,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
 from member.serializers import UserSerializer
-from member.serializers.user_serializers import UserCreationSerializer, UserLoginSerializer, LoginSerializer
+from member.serializers.user_serializers import UserCreationSerializer, UserLoginSerializer
 from ..models import User
 
 __all__ = (

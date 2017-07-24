@@ -42,7 +42,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # 유저모델
 AUTH_USER_MODEL = 'member.User'
 
@@ -54,24 +53,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # The following apps are required:
+    'django.contrib.sites',
 
     'django_extensions',
-    'rest_framework',           # django-restframework 라이브러리
-    'rest_framework.authtoken', # django-rest-allauth 라이브러리
-    'rest_auth',                # django-rest-allauth 라이브러리
-    'rest_auth.registration',   # django-rest-allauth 라이브러리
+    'rest_framework',  # django-restframework 라이브러리
+    'rest_framework.authtoken',  # django-rest-allauth 라이브러리
+    'rest_auth',  # django-rest-allauth 라이브러리
+    'rest_auth.registration',  # django-rest-allauth 라이브러리
 
     'member',
     'post',
 ]
 
-
 ######### djang-allauth configuration start#########
 
 INSTALLED_APPS += [
-    # The following apps are required:
-    'django.contrib.sites',
-
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -95,27 +92,26 @@ ACCOUNT_UNIQUE_EMAIL = False
 
 SOCIALACCOUNT_PROVIDERS = \
     {'facebook':
-       {'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile', 'user_friends'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'FIELDS': [
-            'id',
-            'email',
-            'name',
-            'first_name',
-            'last_name',
-            'verified',
-            'locale',
-            'timezone',
-            'link',
-            'gender',
-            'updated_time'],
-        'EXCHANGE_TOKEN': True,
-        'LOCALE_FUNC': lambda request: 'kr_KR',
-        'VERIFIED_EMAIL': True,
-        'VERSION': 'v2.4'},
+         {'METHOD': 'oauth2',
+          'SCOPE': ['email', 'public_profile', 'user_friends'],
+          'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+          'FIELDS': [
+              'id',
+              'email',
+              'name',
+              'first_name',
+              'last_name',
+              'verified',
+              'locale',
+              'timezone',
+              'link',
+              'gender',
+              'updated_time'],
+          'EXCHANGE_TOKEN': True,
+          'LOCALE_FUNC': lambda request: 'kr_KR',
+          'VERIFIED_EMAIL': True,
+          'VERSION': 'v2.4'},
      }
-
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -128,12 +124,19 @@ AUTHENTICATION_BACKENDS = (
 ######### djang-allauth configuration end #########
 
 
-
 ######### django-rest-auth configuration start #########
 
-    # REST-AUTH 에서 로그인 시리얼 라이저는 커스텀(email 필드 제거)한 시리얼 라이절르 사용합니다.
+# REST-AUTH 에서 로그인 시리얼 라이저는 커스텀(email 필드 제거)한 시리얼라이저를 사용합니다.
 REST_AUTH_SERIALIZERS = {
     'LOGIN_SERIALIZER': 'member.serializers.user_serializers.UserLoginSerializer', }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+    ),
+}
 
 ######### django-rest-auth configuration end #########
 
@@ -168,8 +171,6 @@ TEMPLATES = [
         },
     },
 ]
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
