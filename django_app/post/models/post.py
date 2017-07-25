@@ -1,7 +1,7 @@
 from django.db import models
 
 from config import settings
-
+from post.models.others import Tag
 
 __all__ = (
     'Post',
@@ -16,9 +16,7 @@ class Post(models.Model):
     photo = models.ImageField(upload_to='post', blank=False)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
-    hash_tag = models.CharField(max_length=30)
-    my_comment = models.CharField(max_length=30)
-    ##########
+    tags = models.ManyToManyField(Tag)
     like_users = models.ManyToManyField(
         settings.base.AUTH_USER_MODEL,
         through='PostLike',
