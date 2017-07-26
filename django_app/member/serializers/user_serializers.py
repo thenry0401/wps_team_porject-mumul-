@@ -1,12 +1,20 @@
+import json
+
+from django.http import HttpRequest
+from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.authtoken.models import Token
 
+from config.settings.base import CONFIG_SECRET_DEPLOY_FILE
 from ..models import User
 
 __all__ = (
     'UserSerializer',
     'UserCreationSerializer',
     'UserLoginSerializer',
+    'FacebookLoginSerializer',
 )
 
 
@@ -54,3 +62,23 @@ class UserLoginSerializer(LoginSerializer):
         fields = super(LoginSerializer, self).get_fields()
         del fields['email']
         return fields
+
+
+class FacebookLoginSerializer(SocialLoginSerializer):
+    """페이스북 로그인을 통한 Login Serializer"""
+
+    config_secret_deploy = json.loads(open(CONFIG_SECRET_DEPLOY_FILE).read())
+    access_token = serializers.CharField(default=config_secret_deploy['facebook']['SOCIAL_AUTH_FACEBOOK_ACCESS_TOKEN'])
+    # email = serializers.EmailField(required=False, allow_blank=True)
+    # password = serializers.CharField(style={'input_type': 'password'})
+
+    # def get_fields(self):
+    #     fields = super(SocialLoginSerializer, self).get_fields()
+    #     del fields['code']
+    #
+    #     return fields
+
+
+class EverybodyCanAuthentication(SessionAuthentication):
+    def authenticate(self, request):
+        return None

@@ -6,14 +6,13 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
 from member.serializers import UserSerializer
-from member.serializers.user_serializers import UserCreationSerializer, UserLoginSerializer
+from member.serializers.user_serializers import UserCreationSerializer, UserLoginSerializer, FacebookLoginSerializer
 from ..models import User
 
 __all__ = (
     'UserListCreateView',
     'UserLoginView',
-    'FacebookLogin',
-
+    'FacebookLoginView',
 )
 
 class UserListCreateView(generics.ListCreateAPIView):
@@ -37,5 +36,10 @@ class UserLoginView(LoginView):
         super(UserLoginView, self).login(self)
 
 
-class FacebookLogin(SocialLoginView):
+class FacebookLoginView(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
+    serializer_class = FacebookLoginSerializer
+
+
+
+

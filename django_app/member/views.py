@@ -1,7 +1,9 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 # Create your views here.
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from django.contrib.auth import get_user_model
+from rest_auth.registration.views import SocialLoginView
 
 User = get_user_model()
 
@@ -29,3 +31,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
             User.objects.get_or_create_naver_user(user_pk=user.pk, extra_data=extra_data)
 
         return user
+
+
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
