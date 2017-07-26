@@ -2,5 +2,11 @@
 {% block content %}
 <h2>내 프로필 수정하기</h2>
 
+<div>
+    <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+        <div>{{ form.as_p }}</div>
+        <button type="submit">프로필 수정</button>
+    </form>
+</div>
 
 {% endblock %}
