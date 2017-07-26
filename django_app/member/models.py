@@ -61,9 +61,9 @@ class User(AbstractUser):
     user_type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES, default='D')
     nickname = models.CharField(max_length=14, null=True, blank=True)
     email = models.EmailField(blank=True, null=True)
-    post_code = models.CharField(max_length=10)
-    jibun_address = models.CharField(max_length=100, blank=True)
-    road_address = models.CharField(max_length=100, blank=True)
+    post_code = models.CharField(max_length=10, blank=True, null=True)
+    jibun_address = models.CharField(max_length=100, blank=True, null=True)
+    road_address = models.CharField(max_length=100, blank=True, null=True)
     profile_image = CustomImageField(
         upload_to='user_profile_img',
         blank=True,

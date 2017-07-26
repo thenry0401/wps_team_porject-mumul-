@@ -10,5 +10,7 @@ class UserEditForm(forms.ModelForm):
             'nickname',
             'profile_image',
             'email',
-            'address',
+            'post_code',
+            'road_address',
+            'jibun_address',
         ]
