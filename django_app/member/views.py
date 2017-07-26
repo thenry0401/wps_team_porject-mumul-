@@ -68,6 +68,7 @@ def my_profile_edit(request):
             instance=request.user
         )
         if form.is_valid():
+            print(form.cleaned_data)
             form.save()
             return redirect('member:my_profile_edit')
 
