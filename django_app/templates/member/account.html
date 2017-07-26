@@ -1,5 +1,4 @@
-{% if user.is_authenticated %}
-    <span>{{ user }}님이 로그인중입니다.</span>
+
 
     {% for account in user.socialaccount_set.all %}
 
@@ -19,9 +18,6 @@
       {% empty %}
       <p>you haven't any social account please</p>
     {% endfor %}
-
-
-    {% endif %}
 
     <h2><a href="/accounts/password/change">계정 비밀번호 변경</a></h2>
     <h2><a href="/accounts/confirm-email">계정 확인 이메일</a></h2>
