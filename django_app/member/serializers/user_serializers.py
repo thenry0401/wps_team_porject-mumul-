@@ -1,11 +1,9 @@
 import json
 
-from django.http import HttpRequest
 from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.authtoken.models import Token
 
 from config.settings.base import CONFIG_SECRET_DEPLOY_FILE
 from ..models import User

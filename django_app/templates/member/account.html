@@ -1,0 +1,27 @@
+{% if user.is_authenticated %}
+    <span>{{ user }}님이 로그인중입니다.</span>
+
+    {% for account in user.socialaccount_set.all %}
+
+     {% comment %} show avatar from url {% endcomment %}
+     <h2 style="text-transform:capitalize;">{{ account.provider }} account data</h2>
+
+     <p><img width="50" height="50" src="{{ account.get_avatar_url }}"/></p>
+
+     <p>UID: <a href="{{ account.extra_data.link }}">{{ account.uid }}</a></p>
+
+     <p>Username: {{ account.extra_data.username }}</p>
+      <p>First Name: {{ account.extra_data.first_name }}</p>
+      <p>Last Name: {{ account.extra_data.last_name }}</p>
+
+      <p>Dashboard Link:
+      <a href="{{ account.extra_data.link }}">{{ account.extra_data.link }}</a></p>
+      {% empty %}
+      <p>you haven't any social account please</p>
+    {% endfor %}
+
+
+    {% endif %}
+
+    <h2><a href="/accounts/password/change">계정 비밀번호 변경</a></h2>
+    <h2><a href="/accounts/confirm-email">계정 확인 이메일</a></h2>

@@ -1,3 +1,4 @@
+{% load static %}
 {% load socialaccount %}
 <!doctype html>
 <html lang="ko">
@@ -6,45 +7,23 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <title>Document</title>
 </head>
 <body>
 
-    <h1>hello world</h1>
-    {% if user.is_authenticated %}
-    <span>{{ user }}님이 로그인중입니다.</span>
-
-    {% for account in user.socialaccount_set.all %}
-
-     {% comment %} show avatar from url {% endcomment %}
-     <h2 style="text-transform:capitalize;">{{ account.provider }} account data</h2>
-
-     <p><img width="50" height="50" src="{{ account.get_avatar_url }}"/></p>
-
-     <p>UID: <a href="{{ account.extra_data.link }}">{{ account.uid }}</a></p>
-
-     <p>Username: {{ account.extra_data.username }}</p>
-      <p>First Name: {{ account.extra_data.first_name }}</p>
-      <p>Last Name: {{ account.extra_data.last_name }}</p>
-
-      <p>Dashboard Link:
-      <a href="{{ account.extra_data.link }}">{{ account.extra_data.link }}</a></p>
-      {% empty %}
-      <p>you haven't any social account please</p>
-    {% endfor %}
-
-
-    {% endif %}
-    <h2><a href="/accounts/login">로그인</a></h2>
-    <h2><a href="{% provider_login_url 'facebook' %}">페이스북 로그인</a></h2>
-    <h2><a href="{% provider_login_url 'naver' %}">네이버 로그인</a></h2>
-    <h2><a href="/accounts/logout">로그아웃</a></h2>
-    <h2><a href="/accounts/signup">회원가입</a></h2>
-    <h2><a href="/accounts/password/change">계정 비밀번호 변경</a></h2>
-    <h2><a href="/accounts/confirm-email">계정 확인 이메일</a></h2>
-
-
-
+    <h1>물물교환 프로젝트</h1>
+    <div class="nav-top-right">
+        <div><button type="button" onclick="location.href='/accounts/login'">로그인</button></div>
+        <div><form action="{% provider_login_url 'facebook' %}">
+            <button type="submit">페이스북 로그인</button>
+        </form></div>
+        <div><form action="{% provider_login_url 'naver' %}">
+            <button type="submit">네이버 로그인</button>
+        </form></div>
+        <div><button type="button" onclick="location.href='/accounts/logout'">로그아웃</button></div>
+    </div>
 
 </body>
 </html>
