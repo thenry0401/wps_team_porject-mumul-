@@ -16,10 +16,11 @@
     <h1>물물교환 프로젝트</h1>
     <div class="nav-top-right">
         {% if user.is_authenticated %}
-            <span>{{ user }}님이 로그인중입니다.</span>
+            <a href="{% url 'member:my_profile' %}"><span>{{ user }}님이 로그인중입니다.</span></a>
             <div><button type="button" onclick="location.href='/accounts/logout'">로그아웃</button></div>
         {% else %}
         <div><button type="button" onclick="location.href='/accounts/login'">로그인</button></div>
+        <div><button type="button" onclick="location.href='/accounts/signup'">회원가입</button></div>
         <div><form action="{% provider_login_url 'facebook' %}">
             <button type="submit">페이스북 로그인</button>
         </form></div>
@@ -27,9 +28,10 @@
             <button type="submit">네이버 로그인</button>
         </form></div>
         {% endif %}
-
-
     </div>
+    {% block content %}
+
+    {% endblock %}
 
 </body>
 </html>

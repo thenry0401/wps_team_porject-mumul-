@@ -1,0 +1,13 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<h2>마이 페이지</h2>
+<div>
+{{ cur_user }}
+    <form action="{% url 'member:my_profile_edit' user.pk %}">
+        <button type="submit">회원정보 수정하기</button>
+    </form>
+</div>
+
+{% endblock %}
+
+

@@ -5,6 +5,10 @@ body {
   height: 100%;
 }
 
+button[type=submit] {
+  font-size: 10px;
+}
+
 .nav-top-right {
   display : inline-block;
   font-size: 10px;
