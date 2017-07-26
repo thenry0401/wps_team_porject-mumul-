@@ -1,9 +1,9 @@
 from django import forms
+
 from ..models import User
 
 
 class UserEditForm(forms.ModelForm):
-
     class Meta:
         model = User
         fields = [
@@ -12,5 +12,6 @@ class UserEditForm(forms.ModelForm):
             'email',
             'post_code',
             'road_address',
-            'jibun_address',
+            'detail_address',
         ]
+
