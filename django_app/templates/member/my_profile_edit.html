@@ -4,9 +4,18 @@
 
 <div>
     <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
-        <div>{{ form.as_p }}</div>
+        <div class="fieldWrapper">
+            <p><label for="">닉네임 :</label>{{ form.nickname }}</p>
+            <p><label for="">프로필 이미지 :</label>{{ form.profile_image }}</p>
+            <p><label for="">이메일 :</label>{{ form.email }}</p>
+            <p><label for="">주소 :</label>{{ form.address }}
+                <button type="submit">주소 검색</button>
+            </p>
+        </div>
+
         <button type="submit">프로필 수정</button>
     </form>
 </div>
+
 
 {% endblock %}
