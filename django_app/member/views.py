@@ -74,6 +74,7 @@ def my_profile_edit(request):
     else:
         form = UserEditForm(instance=request.user)
     context = {
+        'user' : request.user,
         'form': form,
     }
     return render(request, 'member/my_profile_edit.html', context)

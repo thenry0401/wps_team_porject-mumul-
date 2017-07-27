@@ -7,6 +7,7 @@
         <div class="fieldWrapper">
             <p><label>닉네임 :</label>{{ form.nickname }}</p>
             <p><label for="">프로필 이미지 :</label>{{ form.profile_image }}</p>
+            <img src="{{ user.profile_image.url }}" alt="" width="150" height="150">
             <p><label for="">이메일 :</label>{{ form.email }}</p>
             <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
                 <p><label for="">우편번호 :</label>
@@ -15,6 +16,7 @@
                     {{ form.road_address }}<br></p>
                 <p><label for="">상세 주소 :</label>
                     {{ form.detail_address }}<br></p>
+            <button type="submit">회원정보 수정하기</button>
         </div>
 
     </form>
