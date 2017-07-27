@@ -8,7 +8,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from rest_auth.registration.views import SocialLoginView
 
-from member.forms.user_edit import UserEditForm
+from .forms.user_edit import UserEditForm
+from .forms.user_login import LoginForm
 
 User = get_user_model()
 
@@ -41,8 +42,24 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
+def login_view(request):
+    if request.method == 'POST':
+        # POST 요청으로 넘겨받은 아이디/패스워드로 토큰을 받아온다.
+        # data = {
+        #     'username': request.POST['username'],
+        #     'password': request.POST['password']
+        # }
+        # url = 'http://localhost:8000/api/member/token-auth/'
+        # response = requests.post(url, data=data)
+        # response_json = response.json()
+        print('login')
+        login(request)
+        return render(request, 'member/success.html')
+    return render(request, 'member/login.html')
 
 def login(request):
+    if request.method == "POST":
+        form = LoginForm(data=request.POST)
 
     return render(request, 'member/login.html')
 
