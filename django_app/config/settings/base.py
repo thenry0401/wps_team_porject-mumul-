@@ -136,7 +136,14 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    # 'PAGINATE_BY': 10,                 # Default to 10
+    # 'PAGINATE_BY_PARAM': 'page_size',  # Allow client to override, using `?page_size=xxx`.
+    # 'MAX_PAGINATE_BY': 100             # Maximum limit allowed when using `?page_size=xxx`.
+
 }
+
 
 ######### django-rest-auth configuration end #########
 

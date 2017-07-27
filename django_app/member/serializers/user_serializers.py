@@ -2,8 +2,9 @@ import json
 
 from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_auth.serializers import LoginSerializer
-from rest_framework import serializers
+from rest_framework import serializers, pagination
 from rest_framework.authentication import SessionAuthentication
+from rest_framework.pagination import PageNumberPagination
 
 from config.settings.base import CONFIG_SECRET_DEPLOY_FILE
 from ..models import User
@@ -24,7 +25,21 @@ class UserSerializer(serializers.ModelSerializer):
             'username',
             'email',
             'user_type',
+            'post_code',
+            'road_address',
+            'detail_address',
         )
+
+class PaginatedUserSerializer(PageNumberPagination):
+    """
+    Serializes page objects of user querysets.
+    """
+    page_size = 3
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+    class Meta:
+        object_serializer_class = UserSerializer
 
 
 class UserCreationSerializer(serializers.Serializer):
