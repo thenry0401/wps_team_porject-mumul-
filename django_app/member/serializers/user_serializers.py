@@ -22,12 +22,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'pk',
-            'username',
+            'username', 'nickname',
             'email',
             'user_type',
-            'post_code',
-            'road_address',
-            'detail_address',
+            'post_code', 'road_address', 'detail_address',
+            'date_joined', 'last_login'
         )
 
 class PaginatedUserSerializer(PageNumberPagination):
