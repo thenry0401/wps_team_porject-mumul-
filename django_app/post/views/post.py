@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from post.forms.post import PostForm
 from ..models import Post
@@ -19,7 +19,11 @@ __all__ = (
 
 
 def category_post_list(request):
-    pass
+    posts = Post.objects.all()
+    context = {
+        'posts': posts,
+    }
+    return render(request, 'post_list.html', context)
 
 
 def hashtag_post_list(request):
@@ -31,8 +35,13 @@ def location_post_list(request):
 
 
 def post_create(request):
-
-    form = PostForm()
+    if request.method == 'POST':
+        form = PostForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+        return redirect('post:post_list')
+    else:
+        form = PostForm()
     context = {
         'form': form,
     }
