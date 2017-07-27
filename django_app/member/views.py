@@ -2,14 +2,17 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 # Create your views here.
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from rest_auth.registration.views import SocialLoginView
+from django.contrib.auth import \
+    login as django_login, \
+    logout as django_logout, \
+    get_user_model
 
-from .forms.user_edit import UserEditForm
 from .forms.user_login import LoginForm
+from .forms.user_edit import UserEditForm
 
 User = get_user_model()
 
@@ -60,8 +63,24 @@ def login_view(request):
 def login(request):
     if request.method == "POST":
         form = LoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.cleaned_data['user']
+            django_login(request, user)
+            next = request.GET.get('next')
+            if next:
+                return redirect(next)
+            return redirect('index')
 
-    return render(request, 'member/login.html')
+    else:
+        if request.user.is_authenticated:
+            return redirect("index")
+
+        form = LoginForm()
+    context = {
+        'form': form
+    }
+
+    return render(request, 'member/login.html', context)
 
 
 def my_profile(request, user_pk=None):

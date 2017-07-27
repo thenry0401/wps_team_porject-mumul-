@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate
 
-
 class LoginForm(forms.Form):
     username = forms.CharField(
         widget=forms.TextInput(
@@ -27,7 +26,6 @@ class LoginForm(forms.Form):
             username=username,
             password=password,
         )
-
         if user is not None:
             self.cleaned_data['user'] = user
         else:
