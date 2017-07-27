@@ -23,9 +23,9 @@ class Post(models.Model):
         related_name='like_posts'
     )
     # 판매 여부
-    is_sold = models.BooleanField()
+    is_sold = models.BooleanField(default=False)
     # 교환 횟수 카운트
-    exchange_count = models.IntegerField()
+    exchange_count = models.IntegerField(default=0)
     # 판매자 위치
     location = models.CharField(max_length=50)
 
