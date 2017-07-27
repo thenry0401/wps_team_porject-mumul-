@@ -10,7 +10,6 @@ from utils.fields.custom_imagefield import CustomImageField
 
 
 class UserManager(DefaultUserManager):
-
     # 페이스북으로 가입하면 user_type을 F(Facebook)으로 지정한다.
     def get_or_create_facebook_user(self, user_pk, extra_data, profile_url):
         print(extra_data)
@@ -48,6 +47,7 @@ class UserManager(DefaultUserManager):
 
         return user
 
+
 class User(AbstractUser):
     USER_TYPE_DJANGO = 'D'
     USER_TYPE_FACEBOOK = 'F'
@@ -76,4 +76,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.nickname or self.username
-
