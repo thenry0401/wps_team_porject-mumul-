@@ -42,6 +42,11 @@ class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
 
+def login(request):
+
+    return render(request, 'member/login.html')
+
+
 def my_profile(request, user_pk=None):
 
     if not request.user.is_authenticated and not user_pk:
