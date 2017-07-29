@@ -17,7 +17,10 @@
         <div>
             <p>{{ post.title }}</p>
             <p>{{ post.content }}</p>
+            <p>{{ post.location }}</p>
+            <p>{{ post.trading_type }}</p>
         </div>
+        <a href="{% url 'post:post_modify' post_pk=post.pk %}">수정하기</a>
     {% endfor %}
 
 </body>
