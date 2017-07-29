@@ -1,6 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from config import settings
+from config.settings.base import AUTH_USER_MODEL
 from post.models.others import Tag
 
 __all__ = (
@@ -10,7 +12,7 @@ __all__ = (
 
 
 class Post(models.Model):
-    author = models.CharField(max_length=30)
+    author = models.ForeignKey(AUTH_USER_MODEL)
     title = models.CharField(max_length=30)
     content = models.TextField()
     photo = models.ImageField(upload_to='post', blank=False)
@@ -18,14 +20,14 @@ class Post(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag)
     like_users = models.ManyToManyField(
-        settings.base.AUTH_USER_MODEL,
+        AUTH_USER_MODEL,
         through='PostLike',
         related_name='like_posts'
     )
     # 판매 여부
-    is_sold = models.BooleanField()
+    is_sold = models.BooleanField(default=False)
     # 교환 횟수 카운트
-    exchange_count = models.IntegerField()
+    exchange_count = models.IntegerField(default=0)
     # 판매자 위치
     location = models.CharField(max_length=50)
 
