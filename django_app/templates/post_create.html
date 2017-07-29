@@ -8,6 +8,15 @@
     <title>Document</title>
 </head>
 <body>
-    {{ form }}
+<h3>글 작성</h3>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">등록하기</button>
+    </form>
+
+<a href="{% url 'post:post_list' %}">이전 페이지로</a>
+
 </body>
 </html>

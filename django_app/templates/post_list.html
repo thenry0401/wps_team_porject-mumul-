@@ -8,10 +8,17 @@
     <title>물물교환</title>
 </head>
 <body>
+
     <h3>물물교환 목록</h3>
 
+    <a href="{% url 'post:post_create'%}">글 작성하기</a>
+
     {% for post in posts %}
-        {{ post }}
+        <div>
+            <p>{{ post.title }}</p>
+            <p>{{ post.content }}</p>
+        </div>
     {% endfor %}
+
 </body>
 </html>
