@@ -36,7 +36,7 @@ def post_create(request):
     context = {
         'form': form,
     }
-    return render(request, 'post_create.html', context)
+    return render(request, 'post/post_create.html', context)
 
 
 def post_detail(request):
