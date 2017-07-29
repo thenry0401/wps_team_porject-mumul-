@@ -35,12 +35,14 @@ class Post(models.Model):
     CATEGORY_TYPE_BEAUTY = 'be'
     CATEGORY_TYPE_CLOTHING = 'c'
     CATEGORY_TYPE_BOOK = 'bo'
+    CATEGORY_TYPE_OTHERS = 'o'
     CATEGORY_TYPE_CHOICES = (
-        (CATEGORY_TYPE_ELECTRONICS, 'Electronics'),
-        (CATEGORY_TYPE_FURNITURE, 'Furniture'),
-        (CATEGORY_TYPE_BEAUTY, 'Beauty'),
-        (CATEGORY_TYPE_CLOTHING, 'Clothing'),
-        (CATEGORY_TYPE_BOOK, 'Book'),
+        (CATEGORY_TYPE_ELECTRONICS, '전자제품'),
+        (CATEGORY_TYPE_FURNITURE, '가구'),
+        (CATEGORY_TYPE_BEAUTY, '뷰티'),
+        (CATEGORY_TYPE_CLOTHING, '옷'),
+        (CATEGORY_TYPE_BOOK, '책'),
+        (CATEGORY_TYPE_OTHERS, '기타'),
     )
     category = models.CharField(max_length=30, choices=CATEGORY_TYPE_CHOICES)
 
@@ -48,8 +50,8 @@ class Post(models.Model):
     TRADING_TYPE_DIRECT = 'd'
     TRADING_TYPE_PARCEL = 'p'
     TRADING_TYPE_CHOICES = (
-        (TRADING_TYPE_DIRECT, 'Direct'),
-        (TRADING_TYPE_PARCEL, 'Parcel'),
+        (TRADING_TYPE_DIRECT, '직거래'),
+        (TRADING_TYPE_PARCEL, '택배거래'),
     )
     trading_type = models.CharField(max_length=30, choices=TRADING_TYPE_CHOICES)
 
