@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from post.forms.post import PostForm
 from ..models import Post
@@ -32,7 +32,15 @@ def location_post_list(request):
 
 def post_create(request):
 
-    form = PostForm()
+    if request.method == "POST":
+        form = PostForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+
+        return redirect('post:post_create')
+
+    else:
+        form = PostForm()
     context = {
         'form': form,
     }
