@@ -23,7 +23,7 @@ def category_post_list(request):
     context = {
         'posts': posts,
     }
-    return render(request, 'post_list.html', context)
+    return render(request, 'post/post_list.html', context)
 
 
 def hashtag_post_list(request):
@@ -45,16 +45,26 @@ def post_create(request):
     context = {
         'form': form,
     }
-    return render(request, 'post_create.html', context)
+    return render(request, 'post/post_create.html', context)
 
 
 def post_detail(request):
     pass
 
 
-def post_modify(request):
-    pass
-
+def post_modify(request, post_pk):
+    post = Post.objects.get(pk=post_pk)
+    if request.method == 'POST':
+        form = PostForm(data=request.POST, files=request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post:post_list')
+    else:
+        form = PostForm(instance=post)
+    context = {
+        'form': form,
+    }
+    return render(request, 'post/post_modify.html', context)
 
 def post_delete(request):
     pass
