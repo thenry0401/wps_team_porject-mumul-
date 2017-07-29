@@ -15,14 +15,14 @@ S3_USE_SIG4 = True  # AWS_S3_SIGNATURE_VERSION = config_secret_deploy['aws']['s3
 
 # Storage settings
 STATICFILES_LOCATION = 'static'
-MEDIAFILES_LOCATION = 'media'
+MEDIAFILES_LOCATION = '.media'
 DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'   # 기본 스토리지
-STATICFILES_STORAGE = 'config.storages.StaticStorage'   # 이 두 줄을 작성하고 나면 static root, media root 줄은 필요 없어진다.
+STATICFILES_STORAGE = 'config.storages.StaticStorage'   # 이 두 줄을 작성하고 나면 static root, .media root 줄은 필요 없어진다.
 
-# media
+# .media
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(ROOT_DIR, '.static_root')
-MEDIA_URL = "/media/"
+MEDIA_URL = "/.media/"
 # MEDIA_ROOT = os.path.join(ROOT_DIR, '.media')
 
 # 배포모드니까 DEBUG는 False
