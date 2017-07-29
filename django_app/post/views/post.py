@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 
 from post.forms.post import PostForm
-from ..models import Post
 
 User = get_user_model()
 
@@ -40,7 +39,7 @@ def post_create(request):
         return redirect('post:post_create')
 
     else:
-        form = PostForm()
+        form = PostForm(initial={'location' : request.user.road_address})
     context = {
         'form': form,
     }
