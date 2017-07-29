@@ -82,6 +82,10 @@ def login(request):
 
     return render(request, 'member/login.html', context)
 
+def logout(request):
+    django_logout(request)
+    return redirect('index')
+
 
 def my_profile(request, user_pk=None):
 
@@ -114,6 +118,7 @@ def my_profile_edit(request):
 
     else:
         form = UserEditForm(instance=request.user)
+        print(form)
     context = {
         'user' : request.user,
         'form': form,
