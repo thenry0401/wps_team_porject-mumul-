@@ -9,6 +9,7 @@ __all__ = (
     'category_post_list',
     'hashtag_post_list',
     'location_post_list',
+    'post_search_result',
     'post_create',
     'post_delete',
     'post_detail',
@@ -27,6 +28,13 @@ def hashtag_post_list(request):
 
 def location_post_list(request):
     pass
+
+
+def post_search_result(request):
+    context = {
+
+    }
+    return render(request, 'post/search_result.html', context)
 
 
 def post_create(request):
