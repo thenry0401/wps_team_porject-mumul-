@@ -5,6 +5,11 @@ body {
   height: 100%;
 }
 
+.wrap {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: auto;
+}
 a {
   text-decoration: none;
   color : black;

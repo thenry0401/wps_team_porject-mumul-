@@ -1,0 +1,13 @@
+$screen-tablet: 700px;
+$header-height: 83px;
+
+.top-header {
+  height: $header-height;
+}
+
+.top-header {
+  max-width: 1010px;
+  margin : 0 auto;
+  height : $header-height;
+  padding: 0 10px;
+}
