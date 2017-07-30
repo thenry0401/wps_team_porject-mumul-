@@ -80,7 +80,7 @@ class FacebookLoginSerializer(SocialLoginSerializer):
     """페이스북 로그인을 통한 Login Serializer"""
 
     config_secret_deploy = json.loads(open(CONFIG_SECRET_DEPLOY_FILE).read())
-    # access_token = serializers.CharField(default=config_secret_deploy['facebook']['SOCIAL_AUTH_FACEBOOK_ACCESS_TOKEN'])
+    access_token = serializers.CharField(default=config_secret_deploy['facebook']['SOCIAL_AUTH_FACEBOOK_ACCESS_TOKEN'])
     # email = serializers.EmailField(required=False, allow_blank=True)
     # password = serializers.CharField(style={'input_type': 'password'})
 
