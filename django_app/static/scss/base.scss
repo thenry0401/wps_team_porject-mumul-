@@ -1,3 +1,6 @@
+$screen-tablet: 700px;
+$header-height: 83px;
+
 html {
   height: 100%;
 }
@@ -33,13 +36,60 @@ input[type=submit] {
   }
 }
 
+.top-header {
+  max-width: 1010px;
+  margin : 0 auto;
+  height : $header-height;
+  padding: 0 10px;
+
+  .search_box {
+    background-color: white;
+    position: absolute;
+    border: solid 3px #ffa409;
+    padding-right: 150px;
+    position: relative;
+
+    input {
+      vertical-align: middle;
+      border-width: 0;
+      background-color: white;
+      padding: 0 53px;
+      height: 54px;
+      box-sizing: border-box;
+      width: 100%;
+      outline: 0;
+      font-size: 16px;
+      color: #757575;
+    }
+
+    button.search_btn{
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 150px;
+      background-color: #ffa409;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+    }
+
+    label > img {
+      position: absolute;
+      left: 14px;
+      top: 0;
+      bottom: 0;
+      margin: auto 0;
+    }
+}
+
+
 .main-container {
   .main-visual {
     position: relative;
-    width: 100%;
+    width: 50%;
     height: 400px;
-    background: white no-repeat center center;
-    background-size: cover;
 
     .main_search_area {
       max-width: 1010px;
@@ -47,47 +97,11 @@ input[type=submit] {
       margin-top : 50px;
       display: block;
 
-      .search_box {
-        background-color: white;
-        position: absolute;
 
-        border: solid 3px #ffa409;
-        padding-right: 150px;
-        position: relative;
 
-        input {
-          vertical-align: middle;
-          border-width: 0;
-          background-color: white;
-          padding: 0 53px;
-          height: 54px;
-          box-sizing: border-box;
-          width: 100%;
-          outline: 0;
-          font-size: 16px;
-          color: #757575;
-        }
 
-        button.search_btn{
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          right: 0;
-          width: 150px;
-          background-color: #ffa409;
-          font-size: 18px;
-          font-weight: bold;
-          color: white;
-          text-align: center;
-        }
 
-        label > img {
-          position: absolute;
-          left: 14px;
-          top: 0;
-          bottom: 0;
-          margin: auto 0;
-        }
+
       }
     }
   }
