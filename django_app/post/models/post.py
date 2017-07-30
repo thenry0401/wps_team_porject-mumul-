@@ -10,7 +10,7 @@ __all__ = (
 
 
 class Post(models.Model):
-    author = models.CharField(max_length=30)
+    author = models.ForeignKey(settings.base.AUTH_USER_MODEL)
     title = models.CharField(max_length=30)
     content = models.TextField()
     photo = models.ImageField(upload_to='post', blank=False)
