@@ -5,6 +5,7 @@ User = get_user_model()
 
 
 class Command(BaseCommand):
+
     def handle(self, *args, **options):
         email = options[self.User.USERNAME_FIELD]
         password = None
