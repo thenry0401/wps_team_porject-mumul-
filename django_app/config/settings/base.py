@@ -62,8 +62,6 @@ INSTALLED_APPS = [
     'rest_auth',  # django-rest-allauth 라이브러리
     'rest_auth.registration',  # django-rest-allauth 라이브러리
 
-    'django_extensions',
-
     'member',
     'post',
 ]
@@ -80,7 +78,7 @@ INSTALLED_APPS += [
     'allauth.socialaccount.providers.naver',
 ]
 config_secret_deploy = json.loads(open(CONFIG_SECRET_DEPLOY_FILE).read())
-FACEBOOK_APP_ID = config_secret_deploy['facebook']['SOCIAL_AUTH_FACEBOOK_KEY']
+# FACEBOOK_APP_ID = config_secret_deploy['facebook']['SOCIAL_AUTH_FACEBOOK_KEY']
 
 SITE_ID = 1
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
