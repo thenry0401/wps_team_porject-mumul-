@@ -11,6 +11,7 @@ from django.contrib.auth import \
     logout as django_logout, \
     get_user_model
 
+from member.forms import UserSignUpForm
 from .forms.user_login import LoginForm
 from .forms.user_edit import UserEditForm
 
@@ -85,6 +86,16 @@ def login(request):
 def logout(request):
     django_logout(request)
     return redirect('index')
+
+
+def sign_up(request):
+
+    form = UserSignUpForm
+
+    context = {
+        'form': form
+    }
+    return render(request, 'member/signup.html', context)
 
 
 def my_profile(request, user_pk=None):
