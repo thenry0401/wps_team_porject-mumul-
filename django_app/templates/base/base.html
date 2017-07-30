@@ -37,6 +37,21 @@
             </div>
         </header>
         <div class="container">
+            <div class="main-container">
+                <div class="main-visual">
+                    <div class="main_search_area">
+                        <div class="main-visual" style="background-image: url('//s.zigbang.com/v1/web/main/img_1111a.jpg');">
+                            <div class="search_box">
+                                <label for="">
+                                    <img src="{% static 'images/ic-search.png' %}" width="28px">
+                                    <input type="text">
+                                    <button class="search_btn" id="search_btn">찾아보기</button>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% block content %}
 
         {% endblock %}
