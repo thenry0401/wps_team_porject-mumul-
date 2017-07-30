@@ -1,0 +1,29 @@
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color : black;
+
+  a:hover {
+    color : blue;
+  }
+}
+
+input[type=submit] {
+  font-size: 10px;
+}
+
+.nav-top-right {
+  display : inline-block;
+  font-size: 10px;
+  float : right;
+
+  > div{
+    display : inline-block;
+  }
+}
