@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from post.forms.post import PostForm
 from ..models import Post
@@ -66,14 +66,18 @@ def post_modify(request, post_pk):
     }
     return render(request, 'post/post_modify.html', context)
 
-def post_delete(request):
-    pass
+
+def post_delete(request, post_pk):
+    post = get_object_or_404(Post, pk=post_pk)
+    if request.method == 'POST':
+        post.delete()
+        return redirect('post:post_list')
+    else:
+        context = {
+            'post': post,
+        }
+        return render(request, 'post/post_delete.html', context)
 
 
 def post_like_toggle(request):
     pass
-
-
-
-
-
