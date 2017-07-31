@@ -25,19 +25,21 @@
 <a href="{{ signup_url }}">sign up</a> first.</p>
 {% endif %}
 
-<div class="login-container">
-    <form action="{% url 'member:login' %}" method="POST">{% csrf_token %}
-        <p>
-            <label for="">ID : </label>
-            <input type="text" name="username">
-        </p>
-        <p>
-            <label for="">PW : </label>
-            <input type="password" name="password">
-        </p>
-        <button type="submit">로그인</button>
-    </form>
+{% if form.error %}
+    <p>ID나 비밀번호가 일치하지 않습니다.</p>
+{% endif %}
 
-</div>
+<form action="{% url 'member:login' %}" method="POST">{% csrf_token %}
+    <p>
+        <label for="">이메일 : </label>
+        <input type="text" name="email">
+    </p>
+    <p>
+        <label for="">패스워드 : </label>
+        <input type="password" name="password">
+    </p>
+    <button type="submit">로그인</button>
+</form>
+
 
 {% endblock %}

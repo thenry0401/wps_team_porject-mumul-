@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'pk',
-            'username', 'nickname',
+            'nickname',
             'email',
             'user_type',
             'post_code', 'road_address', 'detail_address',
@@ -42,16 +42,16 @@ class PaginatedUserSerializer(PageNumberPagination):
 
 
 class UserCreationSerializer(serializers.Serializer):
-    username = serializers.CharField(
+    email = serializers.CharField(
         max_length=50,
     )
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 
-    def validate_username(self, username):
-        if User.objects.filter(username=username).exists():
+    def validate_username(self, email):
+        if User.objects.filter(email=email).exists():
             raise serializers.ValidationError("중복되는 아이디가 존재합니다.")
-        return username
+        return email
 
     def validate(self, data):
         if data['password1'] != data['password2']:
@@ -60,7 +60,7 @@ class UserCreationSerializer(serializers.Serializer):
 
     def save(self, *args, **wargs):
         user = User.objects.create_user(
-            username=self.validated_data.get('username', ''),
+            email=self.validated_data.get('email', ''),
             password=self.validated_data.get('password1', ''),
         )
         return user

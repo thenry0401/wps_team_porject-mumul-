@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="main-container">
+    <div class="main-visual">
+        <div class="main_search_area">
+            <div class="search_box">
+                <label for="">
+                    <img src="{% static 'images/ic-search.png' %}" width="28px">
+                    <form action="{% url 'post:post_search_result' %}" method="GET">
+                        <input type="text" placeholder="검색 키워드를 입력하세요">
+                        <button class="search_btn" id="search_btn" method="GET">찾아보기</button>
+                    </form>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
