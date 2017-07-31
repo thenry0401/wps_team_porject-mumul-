@@ -1,0 +1,13 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div>
+    <p>제목: {{ post.title }}</a></p>
+    <p>작성자: {{ post.user }}</p>
+    <p>내용: {{ post.content }}</p>
+    <p>지역: {{ post.location }}</p>
+    <p>거래방식: {{ post.trading_type }}</p>
+</div>
+<button>
+    <a href="{% url 'post:post_list' %}">이전 페이지</a>
+</button>
+{% endblock %}

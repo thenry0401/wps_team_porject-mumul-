@@ -48,9 +48,12 @@ def post_create(request):
     return render(request, 'post/post_create.html', context)
 
 
-def post_detail(request):
-    pass
-
+def post_detail(request, post_pk):
+    post = Post.objects.get(pk=post_pk)
+    context = {
+        'post': post
+    }
+    return render(request, 'post/post_detail.html', context)
 
 def post_modify(request, post_pk):
     post = Post.objects.get(pk=post_pk)
