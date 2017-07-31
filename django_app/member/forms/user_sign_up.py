@@ -1,43 +1,30 @@
 from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+
+User = get_user_model()
 
 
-class UserSignUpForm(forms.Form):
-    email = forms.EmailField(
-        widget=forms.EmailInput(
-            attrs={
-                'placeholder': '이메일을 입력하세요'
-            }
-        ), label="이메일"
-    )
+class UserSignUpForm(UserCreationForm):
 
-    password = forms.CharField(
-        widget=forms.PasswordInput(
-            attrs={
-                'placeholder': '비밀번호를 입력하세요',
-            }
-        ), label="비밀번호"
-    )
-
-    password_confirm = forms.CharField(
-        widget=forms.PasswordInput(
-            attrs={
-                'placeholder': '비밀번호를 확인합니다.',
-            }
-        ), label="비밀번호 검증"
-    )
-
-    username = forms.CharField(
+    name = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={
                 'placeholder': '실명을 입력하세요',
             }
-        ), label="아이디"
+        ), label="성함"
     )
 
-    user_nickname = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                'placeholder': '닉네임을 입력하세요',
-            }
-        ), label="닉네임"
-    )
+    class Meta:
+        model = User
+        fields = ('email', 'name', 'nickname')
+
+
+    def signup(self, request, user):
+        user.email = self.cleaned_data["email"]
+        user.nickname = self.cleaned_data['nickname']
+        user.name = self.cleaned_data['name']
+        user.save()
+
+        return user

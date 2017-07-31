@@ -8,7 +8,6 @@ urlpatterns = [
     # 로그인, 로그아웃, 회원가입
     url(r'^login/$', views.login, name='login'),
     url(r'^logout/$', views.logout, name='logout'),
-    url(r'^sign-up/$', views.sign_up, name='sign_up'),
 
     # 마이 페이지, 계정 수정
     url(r'^my_page/(?P<user_pk>\d+)/$', views.my_profile, name='my_profile'),

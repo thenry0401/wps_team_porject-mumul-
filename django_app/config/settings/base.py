@@ -89,9 +89,9 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ## 이메일을 로그인 아이디로 사용합니다.
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'nickname'
-ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 
 ## 소셜 계정으로 가입하는 경우 추가 정보를 기입하기 위한 설정입니다.
@@ -100,6 +100,7 @@ SOCIALACCOUNT_AUTO_SIGNUP = True
 
 ## 커스텀 SignUp 폼을 사용합니다.
 ACCOUNT_SIGNUP_FORM_CLASS = 'member.forms.UserSignUpForm'
+
 
 SOCIALACCOUNT_PROVIDERS = \
     {'facebook':
@@ -122,6 +123,18 @@ SOCIALACCOUNT_PROVIDERS = \
           'LOCALE_FUNC': lambda request: 'kr_KR',
           'VERIFIED_EMAIL': True,
           'VERSION': 'v2.4'},
+
+#https://nid.naver.com/oauth2.0/authorize?client_id=JwGlpc0lDXYdE4OQApK4
+# &redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Faccounts%2Fnaver%2Flogin%2Fcallback%2F
+# &scope=없어도 됨
+# &response_type=code
+# &state=wxkF8ogPqEFV
+# &auth_type=reauthenticate
+    'naver':
+         {
+          'response_type': "code",
+          'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+          },
      }
 
 AUTHENTICATION_BACKENDS = (

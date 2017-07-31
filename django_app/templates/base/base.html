@@ -30,15 +30,15 @@
                 </div>
             <div class="nav-top-right">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'member:my_profile' user.pk %}"><span>{{ user }}님이 로그인중입니다.</span></a>
+                    <a href="{% url 'member:my_profile' user.pk %}"><span>{{ user.email }}님이 로그인중입니다.</span></a>
                     <div><button type="button" onclick="location.href='/member/logout'">로그아웃</button></div>
                 {% else %}
                 <div><button type="button" onclick="location.href='/member/login'">로그인</button></div>
-                <div><button type="button" onclick="location.href='/member/sign-up'">회원가입</button></div>
+                <div><button type="button" onclick="location.href='/accounts/signup'">회원가입</button></div>
                 <div><form action="{% provider_login_url 'facebook' %}">
                     <button type="submit">페이스북 로그인</button>
                 </form></div>
-                <div><form action="{% provider_login_url 'naver' %}">
+                <div><form action="{% provider_login_url 'naver' method='oauth2'  %}">
                     <button type="submit">네이버 로그인</button>
                 </form></div>
                 {% endif %}

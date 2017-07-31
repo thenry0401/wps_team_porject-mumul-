@@ -1,17 +1,14 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 # Create your views here.
-from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from rest_auth.registration.views import SocialLoginView
 from django.contrib.auth import \
     login as django_login, \
     logout as django_logout, \
     get_user_model
 
-from member.forms import UserSignUpForm
 from .forms.user_login import LoginForm
 from .forms.user_edit import UserEditForm
 
@@ -19,6 +16,7 @@ User = get_user_model()
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
+
     def save_user(self, request, sociallogin, form=None):
         """
         allauth를 통해서 유저를 저장할 때 호출됩니다. 유저 객체에 추가적인 정보를 담기 위해서 오버라이드를 실시했습니다.
@@ -29,6 +27,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         # (하드코딩) social_app_name = str(request.path).split("/")[2].upper()
         social_app_name = sociallogin.account.provider.upper()
         extra_data = sociallogin.account.extra_data
+
         if social_app_name == "FACEBOOK":
             profile_url = "https://graph.facebook.com/v2.4/{user_id}/picture?type=square&height={height}&width={width}&return_ssl_rources=1".format(
                 user_id=extra_data['id'],
@@ -42,9 +41,6 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
 
         return user
 
-
-class FacebookLogin(SocialLoginView):
-    adapter_class = FacebookOAuth2Adapter
 
 def login_view(request):
     if request.method == 'POST':
@@ -60,6 +56,7 @@ def login_view(request):
         login(request)
         return render(request, 'member/success.html')
     return render(request, 'member/login.html')
+
 
 def login(request):
     if request.method == "POST":
@@ -83,23 +80,13 @@ def login(request):
 
     return render(request, 'member/login.html', context)
 
+
 def logout(request):
     django_logout(request)
     return redirect('index')
 
 
-def sign_up(request):
-
-    form = UserSignUpForm
-
-    context = {
-        'form': form
-    }
-    return render(request, 'member/signup.html', context)
-
-
 def my_profile(request, user_pk=None):
-
     if not request.user.is_authenticated and not user_pk:
         login_url = reverse('accounts:login')
         redirect_url = login_url + '?next=' + request.get_full_path()
@@ -114,6 +101,7 @@ def my_profile(request, user_pk=None):
     }
 
     return render(request, 'member/my_profile.html', context)
+
 
 @login_required
 def my_profile_edit(request):
@@ -131,8 +119,7 @@ def my_profile_edit(request):
         form = UserEditForm(instance=request.user)
         print(form)
     context = {
-        'user' : request.user,
+        'user': request.user,
         'form': form,
     }
     return render(request, 'member/my_profile_edit.html', context)
-
