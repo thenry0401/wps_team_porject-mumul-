@@ -30,13 +30,15 @@
         {% endif %}
     </div>
     <div>
-
+        {% if user.is_authenticated %}
         <div><button type="button" onclick="location.href='/post/create'">글쓰기</button></div>
-
+        {% else %}
+        <div><button type="button" onclick="location.href='/member/login'">글쓰기</button></div>
+        {% endif %}
     </div>
+    <div>
     {% block content %}
-
     {% endblock %}
-
+    </div>
 </body>
 </html>
