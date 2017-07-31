@@ -1,27 +1,23 @@
-<!doctype html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>물물교환</title>
-</head>
-<body>
+{% extends 'base/base.html' %}
 
-    <h3>물물교환 목록</h3>
+{% block content %}
+<h3>물물교환 목록</h3>
 
-    <a href="{% url 'post:post_create'%}">글 작성하기</a>
+{% if user.is_authenticated %}
+<a href="{% url 'member:login'%}">글 작성하기</a>
+{% else %}
+<a href="{% url 'post:post_create'%}">글 작성하기</a>
+{% endif %}
 
-    {% for post in posts %}
-        <div>
-            <p>{{ post.title }}</p>
-            <p>{{ post.content }}</p>
-            <p>{{ post.location }}</p>
-            <p>{{ post.trading_type }}</p>
-        </div>
-        <a href="{% url 'post:post_modify' post_pk=post.pk %}">수정하기</a>
-    {% endfor %}
+{% for post in posts %}
+<div>
+    <p>제목: {{ post.title }}</p>
+    <p>작성자: {{ post.author }}</p>
+    <p>내용: {{ post.content }}</p>
+    <p>지역: {{ post.location }}</p>
+    <p>거래방식: {{ post.trading_type }}</p>
+</div>
+<a href="{% url 'post:post_modify' post_pk=post.pk %}">수정하기</a>
+{% endfor %}
 
-</body>
-</html>
+{% endblock %}
