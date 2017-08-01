@@ -46,7 +46,7 @@ def post_create(request):
     if request.method == "POST":
         form = PostForm(data=request.POST, files=request.FILES)
         if form.is_valid():
-            form.save(author=request.user)
+            post = form.save(author=request.user)
             return redirect('post:post_detail', post_pk=post.pk)
     else:
         form = PostForm(initial={'location': request.user.road_address})
