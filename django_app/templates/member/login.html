@@ -9,9 +9,9 @@
 {% get_providers as socialaccount_providers %}
 
 {% if socialaccount_providers %}
-소셜 계정으로 로그인 또는 회원가입을 할 수 있습니다.
-    <a href="{{ signup_url }}">sign up</a>
-    for a {{ site_name }} account and sign in below
+소셜 계정으로 로그인
+    <a href="{{ signup_url }}"></a>
+    {{ site_name }}
 </p>
 
 <div class="socialaccount_ballot">
@@ -20,24 +20,22 @@
   </ul>
   <div class="login-or"></div>
 </div>
-
-{% else %}
-<a href="{{ signup_url }}">sign up</a> first.</p>
 {% endif %}
 
-{% if form.error %}
-    <p>ID나 비밀번호가 일치하지 않습니다.</p>
-{% endif %}
 
 <form action="{% url 'member:login' %}" method="POST">{% csrf_token %}
-    <p>
-        <label for="">이메일 : </label>
-        <input type="text" name="email">
-    </p>
-    <p>
-        <label for="">패스워드 : </label>
-        <input type="password" name="password">
-    </p>
+    {{ form.as_p }}
+    {% if form.error %}
+        <p>ID나 비밀번호가 일치하지 않습니다.</p>
+    {% endif %}
+    <!--<p>-->
+        <!--<label for="">이메일 : </label>-->
+        <!--<input type="text" name="email">-->
+    <!--</p>-->
+    <!--<p>-->
+        <!--<label for="">패스워드 : </label>-->
+        <!--<input type="password" name="password">-->
+    <!--</p>-->
     <button type="submit">로그인</button>
 </form>
 

@@ -1,9 +1,9 @@
 from django import forms
-from django.contrib.auth import authenticate
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, get_user_model
 
+User = get_user_model()
 
-class LoginForm(AuthenticationForm):
+class LoginForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
@@ -21,6 +21,10 @@ class LoginForm(AuthenticationForm):
             }
         ), label="비밀번호"
     )
+
+    class Meta:
+        model = User
+        fields = ["email", "password"]
 
     def clean(self):
         cleaned_data = super().clean()

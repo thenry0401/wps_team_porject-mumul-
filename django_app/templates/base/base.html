@@ -33,7 +33,7 @@
                     <a href="{% url 'member:my_profile' user.pk %}"><span>{{ user.email }}님이 로그인중입니다.</span></a>
                     <div><button type="button" onclick="location.href='/member/logout'">로그아웃</button></div>
                 {% else %}
-                <div><button type="button" onclick="location.href='/member/login'">로그인</button></div>
+                <div><button type="button"><a href="{% url 'member:login' %}">로그인</a></button></div>
                 <div><button type="button" onclick="location.href='/accounts/signup'">회원가입</button></div>
                 <div><form action="{% provider_login_url 'facebook' %}">
                     <button type="submit">페이스북 로그인</button>
