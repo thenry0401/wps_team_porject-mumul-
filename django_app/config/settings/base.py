@@ -150,7 +150,7 @@ AUTHENTICATION_BACKENDS = (
 
 # REST-AUTH 에서 로그인 시리얼 라이저는 커스텀(email 필드 제거)한 시리얼라이저를 사용합니다.
 REST_AUTH_SERIALIZERS = {
-    'LOGIN_SERIALIZER': 'member.serializers.user_serializers.UserLoginSerializer', }
+    'LOGIN_SERIALIZER': 'member.serializers.user_login_serializers.UserLoginSerializer', }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

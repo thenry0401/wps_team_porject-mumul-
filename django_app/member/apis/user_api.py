@@ -1,15 +1,14 @@
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
-from django.conf import settings
-from django.core import paginator
-from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from rest_auth.models import TokenModel
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.views import LoginView
-from rest_framework import generics, pagination, request
+from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from member.serializers import UserSerializer
-from member.serializers.user_serializers import UserCreationSerializer, UserLoginSerializer, FacebookLoginSerializer, \
-    PaginatedUserSerializer
+
+from member.serializers import UserLoginSerializer, FacebookLoginSerializer
+from member.serializers.user_serializers import UserCreationSerializer, \
+    PaginatedUserSerializer, UserSerializer
+
 from ..models import User
 
 __all__ = (
