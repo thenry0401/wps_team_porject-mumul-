@@ -1,4 +1,5 @@
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from allauth.socialaccount.providers.naver.views import NaverOAuth2Adapter
 from django.conf import settings
 from rest_auth.app_settings import create_token
 from rest_auth.models import TokenModel
@@ -10,6 +11,7 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth import login as django_login
 
 from member.serializers import UserLoginSerializer, FacebookLoginSerializer
+from member.serializers.user_login_serializers import NaverLoginSerializer
 from member.serializers.user_serializers import UserCreationSerializer, \
     PaginatedUserSerializer, UserSerializer
 
@@ -19,6 +21,7 @@ __all__ = (
     'UserListView',
     'UserLoginView',
     'FacebookLoginView',
+    'NaverLoginView'
 )
 
 class UserListView(generics.ListCreateAPIView):
@@ -57,6 +60,11 @@ class UserLoginView(LoginView):
 class FacebookLoginView(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
     serializer_class = FacebookLoginSerializer
+
+
+class NaverLoginView(SocialLoginView):
+    adapter_class = NaverOAuth2Adapter
+    serializer_class = NaverLoginSerializer
 
 
 
