@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.validators import UniqueValidator
 
 from ..models import User
 
@@ -12,8 +13,6 @@ __all__ = (
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
-    # password = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
         user = get_user_model().objects.create(
@@ -31,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'nickname',
+            'password',
             'email',
             'user_type',
             'post_code', 'road_address', 'detail_address',
@@ -51,9 +51,7 @@ class PaginatedUserSerializer(PageNumberPagination):
 
 
 class UserCreationSerializer(serializers.Serializer):
-    email = serializers.CharField(
-        max_length=50,
-    )
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 

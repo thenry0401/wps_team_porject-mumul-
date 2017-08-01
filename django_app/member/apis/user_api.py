@@ -24,6 +24,7 @@ __all__ = (
 class UserListView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     pagination_class = PaginatedUserSerializer
+    serializer_class = UserSerializer
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
