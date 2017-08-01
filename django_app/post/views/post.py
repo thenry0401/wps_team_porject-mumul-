@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect, get_object_or_404
 
 from post.forms.post import PostForm
-from ..models import Post
+from post.models import Post
 
 User = get_user_model()
 
@@ -10,6 +10,7 @@ __all__ = (
     'category_post_list',
     'hashtag_post_list',
     'location_post_list',
+    'post_search_result',
     'post_create',
     'post_delete',
     'post_detail',
@@ -34,14 +35,21 @@ def location_post_list(request):
     pass
 
 
+def post_search_result(request):
+    context = {
+
+    }
+    return render(request, 'post/search_result.html', context)
+
+
 def post_create(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = PostForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             form.save(author=request.user)
-            return redirect('post:post_list')
+            return redirect('post:post_detail', post_pk=post.pk)
     else:
-        form = PostForm()
+        form = PostForm(initial={'location': request.user.road_address})
     context = {
         'form': form,
     }
@@ -54,6 +62,7 @@ def post_detail(request, post_pk):
         'post': post
     }
     return render(request, 'post/post_detail.html', context)
+
 
 def post_modify(request, post_pk):
     post = Post.objects.get(pk=post_pk)

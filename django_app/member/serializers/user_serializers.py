@@ -1,39 +1,48 @@
-import json
-
-from rest_auth.registration.serializers import SocialLoginSerializer
-from rest_auth.serializers import LoginSerializer
-from rest_framework import serializers, pagination
+from django.contrib.auth import get_user_model
+from rest_framework import serializers
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.validators import UniqueValidator
 
-from config.settings.base import CONFIG_SECRET_DEPLOY_FILE
 from ..models import User
 
 __all__ = (
     'UserSerializer',
     'UserCreationSerializer',
-    'UserLoginSerializer',
-    'FacebookLoginSerializer',
 )
 
 
 class UserSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        user = get_user_model().objects.create(
+            email=validated_data['email'],
+            username=validated_data['username']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
     class Meta:
         model = User
+        write_only_fields = ('password', )
+        read_only_fields = ('id', )
         fields = (
             'pk',
-            'username', 'nickname',
+            'nickname',
+            'password',
             'email',
             'user_type',
             'post_code', 'road_address', 'detail_address',
             'date_joined', 'last_login'
         )
 
+
 class PaginatedUserSerializer(PageNumberPagination):
     """
     Serializes page objects of user querysets.
     """
-    page_size = 3
+    page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
@@ -42,16 +51,14 @@ class PaginatedUserSerializer(PageNumberPagination):
 
 
 class UserCreationSerializer(serializers.Serializer):
-    username = serializers.CharField(
-        max_length=50,
-    )
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 
-    def validate_username(self, username):
-        if User.objects.filter(username=username).exists():
+    def validate_username(self, email):
+        if User.objects.filter(email=email).exists():
             raise serializers.ValidationError("중복되는 아이디가 존재합니다.")
-        return username
+        return email
 
     def validate(self, data):
         if data['password1'] != data['password2']:
@@ -60,35 +67,10 @@ class UserCreationSerializer(serializers.Serializer):
 
     def save(self, *args, **wargs):
         user = User.objects.create_user(
-            username=self.validated_data.get('username', ''),
+            email=self.validated_data.get('email', ''),
             password=self.validated_data.get('password1', ''),
         )
         return user
-
-
-class UserLoginSerializer(LoginSerializer):
-    """장고 자체 회원가입 유저의 Login Serializer"""
-
-    # rest-auth 내 LoginSerializer에서 일반 로그인은 email 필드를 제거
-    def get_fields(self):
-        fields = super(LoginSerializer, self).get_fields()
-        del fields['email']
-        return fields
-
-
-class FacebookLoginSerializer(SocialLoginSerializer):
-    """페이스북 로그인을 통한 Login Serializer"""
-
-    config_secret_deploy = json.loads(open(CONFIG_SECRET_DEPLOY_FILE).read())
-    access_token = serializers.CharField(default=config_secret_deploy['facebook']['SOCIAL_AUTH_FACEBOOK_ACCESS_TOKEN'])
-    # email = serializers.EmailField(required=False, allow_blank=True)
-    # password = serializers.CharField(style={'input_type': 'password'})
-
-    # def get_fields(self):
-    #     fields = super(SocialLoginSerializer, self).get_fields()
-    #     del fields['code']
-    #
-    #     return fields
 
 
 class EverybodyCanAuthentication(SessionAuthentication):

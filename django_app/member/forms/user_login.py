@@ -1,32 +1,40 @@
 from django import forms
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
+
+User = get_user_model()
 
 class LoginForm(forms.Form):
-    username = forms.CharField(
-        widget=forms.TextInput(
+    email = forms.EmailField(
+        widget=forms.EmailInput(
             attrs={
-                'placeholder': '아이디를 입력하세요',
+                'placeholder': '이메일 입력하세요',
+                'required': 'True',
             }
-        ), label="아이디"
+        ), label="이메일"
     )
 
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
                 'placeholder': '비밀번호를 입력하세요',
+                'required': 'True',
             }
         ), label="비밀번호"
     )
 
+    class Meta:
+        model = User
+        fields = ["email", "password"]
+
     def clean(self):
         cleaned_data = super().clean()
-        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
         password = cleaned_data.get('password')
 
         # authenticate() 함수는 settings의 AUTHENTICATION_BACKENDS 항목에 등록된 인증 체계 기반 클래스를 하나씩 가져와서
         # authenticate() 메서드를 호출하여 인증을 시도합니다.
         user = authenticate(
-            username=username,
+            email=email,
             password=password,
         )
         if user is not None:

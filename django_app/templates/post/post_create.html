@@ -1,12 +1,12 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+
 <h3>글 작성</h3>
 
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">등록하기</button>
-</form>
 
 {% endblock %}

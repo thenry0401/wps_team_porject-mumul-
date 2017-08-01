@@ -57,10 +57,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'django_extensions',
-    'rest_framework',  # django-restframework 라이브러리
+    'rest_framework',            # django-restframework 라이브러리
     'rest_framework.authtoken',  # django-rest-allauth 라이브러리
-    'rest_auth',  # django-rest-allauth 라이브러리
-    'rest_auth.registration',  # django-rest-allauth 라이브러리
+    'rest_auth',                 # django-rest-allauth 라이브러리
+    'rest_auth.registration',    # django-rest-allauth 라이브러리
 
     'member',
     'post',
@@ -87,9 +87,24 @@ LOGIN_REDIRECT_URL = "/"
 ACCOUNT_AUTHENTICATED_LOGOUT_REDIRECTS = True
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+## 이메일을 로그인 아이디로 사용합니다.
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None # allauth에게 username 필드가 없음을 알린다.
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'nickname'
+ACCOUNT_USERNAME_REQUIRED = False
+
+
+## 소셜 계정으로 가입하는 경우 추가 정보를 기입하기 위한 설정입니다.
 SOCIALACCOUNT_ADAPTER = 'member.views.SocialAccountAdapter'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-ACCOUNT_UNIQUE_EMAIL = False
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+## 커스텀 SignUp 폼을 사용합니다.
+ACCOUNT_SIGNUP_FORM_CLASS = 'member.forms.UserSignUpForm'
+
 
 SOCIALACCOUNT_PROVIDERS = \
     {'facebook':
@@ -112,6 +127,18 @@ SOCIALACCOUNT_PROVIDERS = \
           'LOCALE_FUNC': lambda request: 'kr_KR',
           'VERIFIED_EMAIL': True,
           'VERSION': 'v2.4'},
+
+#https://nid.naver.com/oauth2.0/authorize?client_id=JwGlpc0lDXYdE4OQApK4
+# &redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Faccounts%2Fnaver%2Flogin%2Fcallback%2F
+# &scope=없어도 됨
+# &response_type=code
+# &state=wxkF8ogPqEFV
+# &auth_type=reauthenticate
+    'naver':
+         {
+          'response_type': "code",
+          'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+          },
      }
 
 AUTHENTICATION_BACKENDS = (
@@ -122,14 +149,9 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-######### djang-allauth configuration end #########
-
-
-######### django-rest-auth configuration start #########
-
 # REST-AUTH 에서 로그인 시리얼 라이저는 커스텀(email 필드 제거)한 시리얼라이저를 사용합니다.
 REST_AUTH_SERIALIZERS = {
-    'LOGIN_SERIALIZER': 'member.serializers.user_serializers.UserLoginSerializer', }
+    'LOGIN_SERIALIZER': 'member.serializers.user_login_serializers.UserLoginSerializer', }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

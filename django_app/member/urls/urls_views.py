@@ -5,7 +5,8 @@ from .. import views
 app_name = 'member'
 
 urlpatterns = [
-    # 로그인, 로그아웃
+    # 로그인, 로그아웃, 회원가입
+    # url(r'^login/$', views.login, name='login'),
     url(r'^login/$', views.login, name='login'),
     url(r'^logout/$', views.logout, name='logout'),
 

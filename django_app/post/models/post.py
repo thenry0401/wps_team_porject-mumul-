@@ -1,6 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from config import settings
+from config.settings.base import AUTH_USER_MODEL
 from post.models.others import Tag
 
 __all__ = (
@@ -18,7 +20,7 @@ class Post(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag)
     like_users = models.ManyToManyField(
-        settings.base.AUTH_USER_MODEL,
+        AUTH_USER_MODEL,
         through='PostLike',
         related_name='like_posts'
     )

@@ -15,3 +15,9 @@ class PostForm(forms.ModelForm):
             'trading_type',
         ]
 
+    def save(self, **kwargs):
+        post = super().save(commit=False)
+        post.author = kwargs.get('author', None)
+        post.save()
+
+        return post
