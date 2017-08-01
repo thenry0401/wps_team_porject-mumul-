@@ -13,12 +13,12 @@ from member.serializers.user_serializers import UserCreationSerializer, UserLogi
 from ..models import User
 
 __all__ = (
-    'UserListCreateView',
+    'UserListView',
     'UserLoginView',
     'FacebookLoginView',
 )
 
-class UserListCreateView(generics.ListCreateAPIView):
+class UserListView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     pagination_class = PaginatedUserSerializer
 

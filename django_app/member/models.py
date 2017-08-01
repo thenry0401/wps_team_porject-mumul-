@@ -11,6 +11,12 @@ from utils.fields.custom_imagefield import CustomImageField
 
 class UserManager(DefaultUserManager):
 
+    def create_user(self, email, password, **kwargs):
+        user = self.model(email=self.normalize_email(email), is_active=True, **kwargs)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
     def create_superuser(self, email, nickname, password):
         user = self.create_user(email, password=password, nickname=nickname)
         user.email = email

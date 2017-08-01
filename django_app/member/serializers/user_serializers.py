@@ -1,11 +1,14 @@
 import json
 
+from django.contrib.auth import get_user_model
 from rest_auth.registration.serializers import SocialLoginSerializer
-from rest_auth.serializers import LoginSerializer
-from rest_framework import serializers, pagination
+from rest_auth.serializers import LoginSerializer, UserModel
+from rest_framework import serializers, pagination, exceptions
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.validators import UniqueValidator
 
+from config import settings
 from config.settings.base import CONFIG_SECRET_DEPLOY_FILE
 from ..models import User
 
@@ -18,8 +21,22 @@ __all__ = (
 
 
 class UserSerializer(serializers.ModelSerializer):
+    # email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
+    # password = serializers.CharField(write_only=True)
+
+    def create(self, validated_data):
+        user = get_user_model().objects.create(
+            email=validated_data['email'],
+            username=validated_data['username']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
     class Meta:
         model = User
+        write_only_fields = ('password', )
+        read_only_fields = ('id', )
         fields = (
             'pk',
             'nickname',
@@ -28,6 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
             'post_code', 'road_address', 'detail_address',
             'date_joined', 'last_login'
         )
+
 
 class PaginatedUserSerializer(PageNumberPagination):
     """
@@ -69,11 +87,16 @@ class UserCreationSerializer(serializers.Serializer):
 class UserLoginSerializer(LoginSerializer):
     """장고 자체 회원가입 유저의 Login Serializer"""
 
-    # rest-auth 내 LoginSerializer에서 일반 로그인은 email 필드를 제거
+    # rest-auth 내 LoginSerializer는 3가지 필드(username, email, password)를 제공합니다.
     def get_fields(self):
         fields = super(LoginSerializer, self).get_fields()
-        del fields['email']
+        del fields['username'] # username은 사용하지 않으므로 삭제합니다.
         return fields
+
+    def validate(self, attrs):
+        attrs['username'] = attrs['email']
+        del attrs['email']
+        return super(LoginSerializer, self).validate(attrs)
 
 
 class FacebookLoginSerializer(SocialLoginSerializer):

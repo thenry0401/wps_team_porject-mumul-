@@ -89,10 +89,13 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ## 이메일을 로그인 아이디로 사용합니다.
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None # allauth에게 username 필드가 없음을 알린다.
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'nickname'
-# ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
+
 
 ## 소셜 계정으로 가입하는 경우 추가 정보를 기입하기 위한 설정입니다.
 SOCIALACCOUNT_ADAPTER = 'member.views.SocialAccountAdapter'
