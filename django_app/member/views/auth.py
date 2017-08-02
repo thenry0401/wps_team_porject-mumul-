@@ -1,6 +1,7 @@
 import requests
 
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from rest_auth.registration.views import SocialLoginView
 from django.contrib.auth import \
@@ -12,9 +13,8 @@ from member.forms import LoginForm
 __all__ = (
     'login',
     'logout',
-    'NaverLoginView',
+    'naver_login',
     'SocialAccountAdapter',
-    'naver_login_test',
 )
 
 User = get_user_model()
@@ -73,11 +73,10 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
 
         return user
 
-def naver_login_test(request):
-    pass
+def naver_login(request):
 
-
-class NaverLoginView(SocialLoginView):
+    code = request.GET.get('code')
+    print("@@@@@@@@@@@@@@@@@@@@@@ code : ", code)
 
     def naver_login(self, request):
         code = request.GET.get('code')
@@ -125,3 +124,5 @@ class NaverLoginView(SocialLoginView):
 
         if 'access_token' in result:
             return result['access_token']
+
+    return HttpResponse("hello world")

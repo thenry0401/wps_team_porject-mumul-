@@ -42,13 +42,7 @@
                 <div><form action="{% provider_login_url 'naver' %}">
                     <button type="submit">네이버 로그인</button>
                 </form></div>
-
-                <div id="naver_id_login">
-                    <form action="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=JwGlpc0lDXYdE4OQApK4&redirect_uri={{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'member:naver_login_test' %}&state={ }">
-                        <a href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'member:naver_login_test' %}"><h1>test</h1></a>
-                    <button type="submit">네이버 로그인 테스트</button>
-                </form></div>
-
+                <a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={{ naver_app_id }}&redirect_uri={{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'member:naver_login' %}?state={{ csrf_token }}">네이버 로그인 테스트</a>
                 {% endif %}
             </div>
             <div>
@@ -63,5 +57,4 @@
         </div>
     </div>
 </body>
-
 </html>
