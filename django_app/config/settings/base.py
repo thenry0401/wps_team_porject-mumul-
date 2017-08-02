@@ -196,6 +196,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
+                'utils.context_processors.naver_login_api_info',
             ],
         },
     },
