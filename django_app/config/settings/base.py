@@ -126,18 +126,6 @@ SOCIALACCOUNT_PROVIDERS = \
           'LOCALE_FUNC': lambda request: 'kr_KR',
           'VERIFIED_EMAIL': True,
           'VERSION': 'v2.4'},
-
-#https://nid.naver.com/oauth2.0/authorize?client_id=JwGlpc0lDXYdE4OQApK4
-# &redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Faccounts%2Fnaver%2Flogin%2Fcallback%2F
-# &scope=없어도 됨
-# &response_type=code
-# &state=wxkF8ogPqEFV
-# &auth_type=reauthenticate
-    'naver':
-         {
-          'response_type': "code",
-          'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-          },
      }
 
 AUTHENTICATION_BACKENDS = (
@@ -196,6 +184,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
+
+                # base.html에 naver_app_id를 전달하기 위한 설정입니다.
                 'utils.context_processors.naver_login_api_info',
             ],
         },
