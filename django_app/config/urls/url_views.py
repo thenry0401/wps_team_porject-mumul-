@@ -17,6 +17,7 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
+from rest_framework.authtoken.views import obtain_auth_token
 
 from .. import views
 
@@ -26,6 +27,8 @@ urlpatterns = [
     url(r'^member/', include('member.urls.urls_views')),
     url(r'^admin/', admin.site.urls),
     url(r'^post/', include('post.urls')),
+    # url(r'^api-token-auth/', obtain_auth_token),
+
 ]
 
 # /static/에 대한 요청을 STATIC_ROOT 경로의 파일에서 찾는다

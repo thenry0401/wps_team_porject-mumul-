@@ -8,7 +8,6 @@ from rest_auth.utils import jwt_encode
 from rest_auth.views import LoginView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from django.contrib.auth import login as django_login
 
 from member.serializers import UserLoginSerializer, FacebookLoginSerializer
 from member.serializers.user_login_serializers import NaverLoginSerializer
@@ -65,7 +64,3 @@ class FacebookLoginView(SocialLoginView):
 class NaverLoginView(SocialLoginView):
     adapter_class = NaverOAuth2Adapter
     serializer_class = NaverLoginSerializer
-
-
-
-
