@@ -7,9 +7,7 @@ from post.models import Post
 User = get_user_model()
 
 __all__ = (
-    'category_post_list',
-    'hashtag_post_list',
-    'location_post_list',
+    'post_list',
     'post_search_result',
     'post_create',
     'post_delete',
@@ -19,20 +17,12 @@ __all__ = (
 )
 
 
-def category_post_list(request):
+def post_list(request):
     posts = Post.objects.all()
     context = {
         'posts': posts,
     }
     return render(request, 'post/post_list.html', context)
-
-
-def hashtag_post_list(request):
-    pass
-
-
-def location_post_list(request):
-    pass
 
 
 def post_search_result(request):
@@ -91,5 +81,5 @@ def post_delete(request, post_pk):
         return render(request, 'post/post_delete.html', context)
 
 
-def post_like_toggle(request):
+def post_like_toggle(request, post_pk):
     pass
