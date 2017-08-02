@@ -1,8 +1,5 @@
 import json
 
-from django.middleware.csrf import rotate_token, _get_new_csrf_string
-
-from config import settings
 from config.settings.base import CONFIG_SECRET_DEPLOY_FILE
 
 __all__ = (
