@@ -81,14 +81,26 @@ def naver_login(request):
     """ base.html에서 네이버 아이디로 로그인을 거친 후, 이 함수에 request가 들어오게 됩니다. """
     state = request.GET.get('state')
     code = request.GET.get('code')
+    error = request.GET.get('error')
     config_secret_deploy = json.loads(open(CONFIG_SECRET_DEPLOY_FILE).read())
 
-    # print("@@@@@@@@@@@@@@@@@@@@@@ state : ", state)
-    # print("@@@@@@@@@@@@@@@@@@@@@@ code : ", code)
+    print("@@@@@@@@@@@@@@@@@@@@@@ state : ", state)
+    print("@@@@@@@@@@@@@@@@@@@@@@ code : ", code)
+
+
+    class DebugTokenException(Exception):
+        def __init__(self, *args, **kwargs):
+            """
+            :param args: ({'error': 'invalid_request', 'error_description': 'no valid data in session'}, )
+            """
+            error_dict = args[0]
+            self.error = error_dict['error']
+            self.error_description = error_dict['error_description']
+
 
     def get_access_token(code):
         """
-        request로부터 code를 받아 액세스토큰 교환 URL에 요청, 이후 해당 액세스 토큰을 반환
+        request로부터 code와 state를 받아 액세스토큰 교환 URL에 요청, 이후 해당 액세스 토큰을 반환
         """
         # 액세스 토큰 발급 요청 URL을 의미합니다.
         access_token_url = "https://nid.naver.com/oauth2.0/token" \
@@ -103,16 +115,21 @@ def naver_login(request):
                                             state=state,
                                             )
 
+        # 파리미터를 조합해 만든 access_token_url로 GET 요청을 보냅니다.
         response = requests.get(access_token_url)
         result = response.json()
+
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ response : ", response)
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ result : ", result)
 
-        if 'access_token' in result:
+        if 'access_token' in result: # 액세스 토큰이 정상 발급된 경우
             return result['access_token']
 
-    result = get_access_token(code)
-    context = {
-        'result' : result
-    }
-    return render(request, 'member/test.html', context)
+        elif 'error' in result: # result 딕셔너리에 'error'가 담기는 경우
+            raise DebugTokenException(result)
+
+        else:
+            raise Exception("Unknown error")
+
+
+    return redirect('index')
