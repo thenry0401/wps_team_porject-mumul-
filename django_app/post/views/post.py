@@ -39,7 +39,11 @@ def post_create(request):
             post = form.save(author=request.user)
             return redirect('post:post_detail', post_pk=post.pk)
     else:
-        form = PostForm(initial={'location': request.user.road_address})
+        form = PostForm(initial={
+            'post_code': request.user.post_code,
+            'road_address': request.user.road_address,
+            'detail_address': request.user.detail_address,
+        })
     context = {
         'form': form,
     }
@@ -59,7 +63,7 @@ def post_modify(request, post_pk):
     if request.method == 'POST':
         form = PostForm(data=request.POST, files=request.FILES, instance=post)
         if form.is_valid():
-            form.save()
+            form.save(author=request.user)
             return redirect('post:post_list')
     else:
         form = PostForm(instance=post)
