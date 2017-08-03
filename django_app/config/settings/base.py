@@ -44,6 +44,7 @@ ALLOWED_HOSTS = []
 
 # 유저모델
 AUTH_USER_MODEL = 'member.User'
+LOGIN_URL ='member:login'
 
 # Application definition
 INSTALLED_APPS = [
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
 
     'member',
     'post',
+    'utils',
 ]
 
 ######### djang-allauth configuration start#########
@@ -135,7 +137,6 @@ AUTHENTICATION_BACKENDS = (
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-
 # REST-AUTH 에서 로그인 시리얼 라이저는 커스텀(email 필드 제거)한 시리얼라이저를 사용합니다.
 REST_AUTH_SERIALIZERS = {
     'LOGIN_SERIALIZER': 'member.serializers.user_login_serializers.UserLoginSerializer', }
@@ -143,7 +144,7 @@ REST_AUTH_SERIALIZERS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
@@ -185,7 +186,7 @@ TEMPLATES = [
                 # `allauth` needs this from django
                 'django.template.context_processors.request',
 
-                # base.html에 naver_app_id를 전달하기 위한 설정입니다.
+                # base.html에 naver 관련 custom tage를 사용하기 위한 설정입니다.
                 'utils.context_processors.naver_login_api_info',
             ],
         },
