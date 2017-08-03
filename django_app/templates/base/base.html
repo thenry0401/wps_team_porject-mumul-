@@ -42,8 +42,9 @@
                 <div><form action="{% provider_login_url 'naver' %}">
                     <button type="submit">네이버 로그인</button>
                 </form></div>
-                <a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={{ naver_app_id }}&state={{ csrf_token }}&redirect_uri={{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'member:naver_login' %}">네이버 로그인 테스트</a>
-                <a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=JwGlpc0lDXYdE4OQApK4&state=iFtE5TbMGhoo&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Faccounts%2Fnaver%2Flogin%2Fcallback%2F&oauth_token=TewMbXK6pUDhwER1"></a>
+                <a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={{ naver_app_id }}&redirect_uri={{ urlencode_redirect_uri }}&state={{ csrf_token }}">네이버 로그인 테스트</a>
+                <h6>https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=JwGlpc0lDXYdE4OQApK4&state=iFtE5TbMGhoo&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Faccounts%2Fnaver%2Flogin%2Fcallback%2F&oauth_token=TewMbXK6pUDhwER1</h6>
+                <h6>https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={{ naver_app_id }}&state={{ csrf_token }}&redirect_uri={{ urlencode_redirect_uri }}</h6>
                 {% endif %}
             </div>
             <div>
