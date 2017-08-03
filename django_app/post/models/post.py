@@ -24,12 +24,16 @@ class Post(models.Model):
         through='PostLike',
         related_name='like_posts'
     )
+
+    # 주소 관련 필드
+    post_code = models.CharField(max_length=10, blank=True, null=True)
+    road_address = models.CharField(max_length=100, blank=True, null=True)
+    detail_address = models.CharField(max_length=100, blank=True, null=True)
+
     # 판매 여부
     is_sold = models.BooleanField(default=False)
     # 교환 횟수 카운트
     exchange_count = models.IntegerField(default=0)
-    # 판매자 위치
-    location = models.CharField(max_length=50)
 
     # 물품 카테고리 분류
     CATEGORY_TYPE_ELECTRONICS = 'e'
