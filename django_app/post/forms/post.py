@@ -10,7 +10,9 @@ class PostForm(forms.ModelForm):
             'title',
             'content',
             'photo',
-            'location',
+            'post_code',
+            'road_address',
+            'detail_address',
             'category',
             'trading_type',
         ]
