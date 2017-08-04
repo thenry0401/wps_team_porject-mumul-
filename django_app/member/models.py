@@ -1,20 +1,16 @@
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager as DefaultUserManager
 from django.core.files.base import ContentFile
 from django.core.files.temp import NamedTemporaryFile
 from django.db import models
 
 # Create your models here.
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from requests import request, HTTPError
-from rest_framework.authtoken.models import Token
 
 from utils.fields.custom_imagefield import CustomImageField
 
 
 class UserManager(DefaultUserManager):
-    def create_user(self, email, password, **kwargs):
+    def create_user(self, email, password=None, **kwargs):
         user = self.model(email=self.normalize_email(email), is_active=True, **kwargs)
         user.set_password(password)
         user.save(using=self._db)
@@ -55,7 +51,7 @@ class UserManager(DefaultUserManager):
         return user
 
     # 네이버로 가입하면 user_type을 N(Naver)으로 지정한다. 그외에 추가적인 정보를 커스텀 저장을 한다.
-    def get_or_create_naver_user(self, user_pk, extra_data):
+    def get_or_create_naver_user2(self, user_pk, extra_data):
         print(extra_data)
         user = User.objects.get(pk=user_pk)
         user.email = extra_data['email']
@@ -65,6 +61,21 @@ class UserManager(DefaultUserManager):
         user.save()
 
         return user
+
+    def get_or_create_naver_user(self, extra_data, password=None):
+        user, user_created = self.get_or_create(
+            email=extra_data['email'],
+            profile_image=extra_data['profile_image'],
+            user_type="N",
+            name=extra_data['name'],
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def get_by_natural_key(self, email):
+        return self.get(email=email)
 
 
 class User(AbstractUser):
@@ -89,7 +100,7 @@ class User(AbstractUser):
     profile_image = CustomImageField(
         upload_to='user_profile_img',
         blank=True,
-        default_static_image='',
+        default_static_image='images/no_profile_image.jpg',
     )
 
     USERNAME_FIELD = 'email'
@@ -104,13 +115,5 @@ class User(AbstractUser):
     def get_username(self):
         return self.email
 
-    def get_full_name(self):
-        return self.email
 
-    def get_short_name(self):
-        return self.email
 
-    # @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-    # def create_auth_token(sender, instance=None, created=False, **kwargs):
-    #     if created:
-    #         Token.objects.create(user=instance)
