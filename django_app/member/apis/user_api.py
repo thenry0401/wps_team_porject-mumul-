@@ -11,13 +11,14 @@ from rest_framework.permissions import AllowAny
 
 from member.serializers import UserLoginSerializer, FacebookLoginSerializer, UserFastCreationSerializer
 from member.serializers.user_login_serializers import NaverLoginSerializer
-from member.serializers.user_serializers import PaginatedUserSerializer, UserSerializer
+from member.serializers.user_serializers import PaginatedUserSerializer, UserSerializer, UserCreationSerializer
 
 from ..models import User
 
 __all__ = (
     'UserListView',
     'UserLoginView',
+    'UserCreateView',
     'FacebookLoginView',
     'NaverLoginView'
 )
@@ -42,8 +43,6 @@ class UserLoginView(LoginView):
     token_model = TokenModel
 
     def login(self):
-
-
         self.user = self.serializer.validated_data['user']
         if getattr(settings, 'REST_USE_JWT', False):
             self.token = jwt_encode(self.user)
@@ -54,6 +53,9 @@ class UserLoginView(LoginView):
         if getattr(settings, 'REST_SESSION_LOGIN', True):
             self.process_login()
 
+class UserCreateView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserCreationSerializer
 
 class FacebookLoginView(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter

@@ -9,6 +9,7 @@ from ..models import User
 __all__ = (
     'UserSerializer',
     'UserFastCreationSerializer',
+    'UserCreationSerializer',
 )
 
 
@@ -65,7 +66,42 @@ class UserFastCreationSerializer(serializers.Serializer):
         )
         return user
 
+class UserCreationSerializer(serializers.ModelSerializer):
+    """
+    소셜 로그인이 아닌 일반 회원가입을 의미합니다.
+    """
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
 
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'name',
+            'nickname',
+            'password1',
+            'password2',
+        )
+
+    def validate_email(self, email):
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError("중복되는 이메일이 존재합니다.")
+        return email
+
+    def validate(self, data):
+        if data['password1'] != data['password2']:
+            raise serializers.ValidationError('비밀번호가 서로 일치하지 않습니다.')
+        return data
+
+    def save(self, *args, **wargs):
+        user = User.objects.create_user(
+            email=self.validated_data.get('email', ''),
+            password=self.validated_data.get('password1', ''),
+            name=self.validated_data.get('name', ''),
+            nickname=self.validated_data.get('nickname', ''),
+        )
+        return user
 
 class PaginatedUserSerializer(PageNumberPagination):
     """
