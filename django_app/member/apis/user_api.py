@@ -9,10 +9,9 @@ from rest_auth.views import LoginView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
-from member.serializers import UserLoginSerializer, FacebookLoginSerializer
+from member.serializers import UserLoginSerializer, FacebookLoginSerializer, UserFastCreationSerializer
 from member.serializers.user_login_serializers import NaverLoginSerializer
-from member.serializers.user_serializers import UserCreationSerializer, \
-    PaginatedUserSerializer, UserSerializer
+from member.serializers.user_serializers import PaginatedUserSerializer, UserSerializer
 
 from ..models import User
 
@@ -32,7 +31,7 @@ class UserListView(generics.ListCreateAPIView):
         if self.request.method == 'GET':
             return UserSerializer
         elif self.request.method == 'POST':
-            return UserCreationSerializer
+            return UserFastCreationSerializer
 
 
 class UserLoginView(LoginView):

@@ -8,7 +8,7 @@ from ..models import User
 
 __all__ = (
     'UserSerializer',
-    'UserCreationSerializer',
+    'UserFastCreationSerializer',
 )
 
 
@@ -37,34 +37,20 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'nickname',
-            'password',
             'email',
             'user_type',
             'post_code', 'road_address', 'detail_address',
             'date_joined', 'last_login'
         )
 
-
-class PaginatedUserSerializer(PageNumberPagination):
-    """
-    Serializes page objects of user querysets.
-    """
-    page_size = 10
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
-
-    class Meta:
-        object_serializer_class = UserSerializer
-
-
-class UserCreationSerializer(serializers.Serializer):
+class UserFastCreationSerializer(serializers.Serializer):
     email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 
     def validate_username(self, email):
         if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError("중복되는 아이디가 존재합니다.")
+            raise serializers.ValidationError("중복되는 이메일이 존재합니다.")
         return email
 
     def validate(self, data):
@@ -78,6 +64,19 @@ class UserCreationSerializer(serializers.Serializer):
             password=self.validated_data.get('password1', ''),
         )
         return user
+
+
+
+class PaginatedUserSerializer(PageNumberPagination):
+    """
+    Serializes page objects of user querysets.
+    """
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+    class Meta:
+        object_serializer_class = UserSerializer
 
 
 class EverybodyCanAuthentication(SessionAuthentication):
