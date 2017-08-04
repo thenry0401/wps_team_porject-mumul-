@@ -44,7 +44,6 @@ ALLOWED_HOSTS = []
 
 # 유저모델
 AUTH_USER_MODEL = 'member.User'
-LOGIN_URL ='member:login'
 
 # Application definition
 INSTALLED_APPS = [
@@ -91,13 +90,12 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ## 이메일을 로그인 아이디로 사용합니다.
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
-# ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
 
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None # allauth에게 username 필드가 없음을 알린다.
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'nickname'
 ACCOUNT_USERNAME_REQUIRED = False
-
 
 ## 소셜 계정으로 가입하는 경우 추가 정보를 기입하기 위한 설정입니다.
 SOCIALACCOUNT_ADAPTER = 'member.views.SocialAccountAdapter'
@@ -131,7 +129,7 @@ SOCIALACCOUNT_PROVIDERS = \
      }
 
 AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
+    # default backend
     'django.contrib.auth.backends.ModelBackend',
 
     # `allauth` specific authentication methods, such as login by e-mail
@@ -144,7 +142,7 @@ REST_AUTH_SERIALIZERS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
