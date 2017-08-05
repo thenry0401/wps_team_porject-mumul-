@@ -14,13 +14,13 @@ __all__ = (
 
 class UserSerializer(serializers.ModelSerializer):
 
-    def create(self, validated_data):
-        password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
-        if password is not None:
-            instance.set_password(password)
-        instance.save()
-        return instance
+    # def create(self, validated_data):
+    #     password = validated_data.pop('password', None)
+    #     instance = self.Meta.model(**validated_data)
+    #     if password is not None:
+    #         instance.set_password(password)
+    #     instance.save()
+    #     return instance
 
         # user = get_user_model().objects.create(
         #     email=validated_data['email'],
@@ -37,6 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'nickname',
+            'name',
             'email',
             'user_type',
             'post_code', 'road_address', 'detail_address',
@@ -108,6 +109,7 @@ class UserCreationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('비밀번호가 서로 일치하지 않습니다.')
         return data
 
+
 class PaginatedUserSerializer(PageNumberPagination):
     """
     Serializes page objects of user querysets.
@@ -118,7 +120,6 @@ class PaginatedUserSerializer(PageNumberPagination):
 
     class Meta:
         object_serializer_class = UserSerializer
-
 
 class EverybodyCanAuthentication(SessionAuthentication):
     def authenticate(self, request):

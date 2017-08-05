@@ -29,15 +29,12 @@ def login(request):
             user = form.cleaned_data['user']
             django_login(request, user)
             next = request.GET.get('next')
-
             if next:
                 return redirect(next)
             return redirect('index')
-
     else:
         if request.user.is_authenticated:
             return redirect("index")
-
         form = LoginForm()
     context = {
         'form': form
