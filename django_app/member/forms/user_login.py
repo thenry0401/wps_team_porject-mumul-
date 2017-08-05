@@ -1,5 +1,6 @@
+from allauth.account.auth_backends import AuthenticationBackend
 from django import forms
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -33,7 +34,8 @@ class LoginForm(forms.Form):
 
         # authenticate() 함수는 settings의 AUTHENTICATION_BACKENDS 항목에 등록된 인증 체계 기반 클래스를 하나씩 가져와서
         # authenticate() 메서드를 호출하여 인증을 시도합니다.
-        user = authenticate(
+        user = AuthenticationBackend._authenticate_by_email(
+            self=self,
             email=email,
             password=password,
         )
@@ -41,6 +43,6 @@ class LoginForm(forms.Form):
             self.cleaned_data['user'] = user
         else:
             raise forms.ValidationError(
-                'Login credential not valid'
+                '로그인 정보가 일치하지 않습니다.',
             )
         return self.cleaned_data
