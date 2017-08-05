@@ -7,6 +7,7 @@ from rest_auth.registration.views import SocialLoginView
 from rest_auth.utils import jwt_encode
 from rest_auth.views import LoginView
 from rest_framework import generics
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny
 
 from member.serializers import UserLoginSerializer, FacebookLoginSerializer, UserFastCreationSerializer
@@ -56,6 +57,13 @@ class UserLoginView(LoginView):
 class UserCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserCreationSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return UserSerializer
+        elif self.request.method == 'POST':
+            return UserCreationSerializer
+
 
 class FacebookLoginView(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
