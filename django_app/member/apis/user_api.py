@@ -6,13 +6,13 @@ from rest_auth.models import TokenModel
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.utils import jwt_encode
 from rest_auth.views import LoginView
-from rest_framework import generics
-from rest_framework.generics import get_object_or_404
+from rest_framework import generics, permissions
 from rest_framework.permissions import AllowAny
 
 from member.serializers import UserLoginSerializer, FacebookLoginSerializer, UserFastCreationSerializer
 from member.serializers.user_login_serializers import NaverLoginSerializer
 from member.serializers.user_serializers import PaginatedUserSerializer, UserSerializer, UserCreationSerializer
+from utils import ObjectIsRequestUser
 
 from ..models import User
 
@@ -21,7 +21,8 @@ __all__ = (
     'UserLoginView',
     'UserCreateView',
     'FacebookLoginView',
-    'NaverLoginView'
+    'NaverLoginView',
+    'UserRetrieveUpdateDestroyView',
 )
 
 class UserListView(generics.ListCreateAPIView):
@@ -63,6 +64,15 @@ class UserCreateView(generics.ListCreateAPIView):
             return UserSerializer
         elif self.request.method == 'POST':
             return UserCreationSerializer
+
+
+class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()  # 객체 하나를 가져와야 한다. 그런데 all()로 가져옴. 제네릭API뷰가 특정 오브젝트를 하나 들고온다.
+    serializer_class = UserSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser,  # 쿼리셋 자체가 유저기 때문에 유저 자체를 비교해야 함
+    )
 
 
 class FacebookLoginView(SocialLoginView):
