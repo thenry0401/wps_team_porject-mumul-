@@ -77,7 +77,8 @@ class UserCreationSerializer(serializers.ModelSerializer):
                                       style={'placeholder': "패스워드 재입력", 'input_type': 'password'})
     name = serializers.CharField(source='user.name', label="이름",
                                  style={'placeholder': "유저의 실명"})
-    nickname = serializers.CharField(source='user.nickname', label="닉네임",
+    nickname = serializers.CharField(validators=[UniqueValidator(queryset=User.objects.all())],
+                                     source='user.nickname', label="닉네임",
                                      style={'placeholder': "사이트에서 사용할 별명"})
 
     class Meta:
@@ -106,15 +107,6 @@ class UserCreationSerializer(serializers.ModelSerializer):
         if data['password1'] != data['password2']:
             raise serializers.ValidationError('비밀번호가 서로 일치하지 않습니다.')
         return data
-
-    def save(self, *args, **wargs):
-        user = User.objects.create_user(
-            email=self.validated_data.get('email', ''),
-            password=self.validated_data.get('password1', ''),
-            name=self.validated_data.get('name', ''),
-            nickname=self.validated_data.get('nickname', ''),
-        )
-        return user
 
 class PaginatedUserSerializer(PageNumberPagination):
     """

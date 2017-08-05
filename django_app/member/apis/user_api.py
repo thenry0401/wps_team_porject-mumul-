@@ -8,6 +8,8 @@ from rest_auth.utils import jwt_encode
 from rest_auth.views import LoginView
 from rest_framework import generics, permissions
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
 from member.serializers import UserLoginSerializer, FacebookLoginSerializer, UserFastCreationSerializer
 from member.serializers.user_login_serializers import NaverLoginSerializer
@@ -64,6 +66,17 @@ class UserCreateView(generics.ListCreateAPIView):
             return UserSerializer
         elif self.request.method == 'POST':
             return UserCreationSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = UserCreationSerializer(data=request.data)
+        if serializer.is_valid():
+            User.objects.create_user(
+                email=serializer.data['email'],
+                name=serializer.data['name'],
+                nickname=serializer.data['nickname'],
+            )
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):

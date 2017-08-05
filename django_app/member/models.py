@@ -10,8 +10,10 @@ from utils.fields.custom_imagefield import CustomImageField
 
 
 class UserManager(DefaultUserManager):
-    def create_user(self, email, password=None, **kwargs):
+    def create_user(self, email, password=None, name=None, nickname=None, **kwargs):
         user = self.model(email=self.normalize_email(email), is_active=True, **kwargs)
+        user.name = name
+        user.nickname = nickname
         user.set_password(password)
         user.save(using=self._db)
         return user
