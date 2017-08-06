@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect, get_object_or_404
 
+from post.forms.comment import CommentForm
 from post.forms.post import PostForm
-from post.models import Post
+from post.models import Post, Comment
 
 User = get_user_model()
 
@@ -53,7 +54,8 @@ def post_create(request):
 def post_detail(request, post_pk):
     post = Post.objects.get(pk=post_pk)
     context = {
-        'post': post
+        'post': post,
+        'comment_form': CommentForm(),
     }
     return render(request, 'post/post_detail.html', context)
 
