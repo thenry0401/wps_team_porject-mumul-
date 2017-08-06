@@ -1,6 +1,4 @@
-from allauth.account.auth_backends import AuthenticationBackend
 from allauth.account.utils import filter_users_by_email
-from django.contrib.auth.hashers import check_password, make_password
 from rest_framework.authentication import BasicAuthentication, get_authorization_header
 
 import base64

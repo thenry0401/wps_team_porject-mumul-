@@ -1,6 +1,7 @@
 import json
 
 import requests
+from allauth.account.auth_backends import AuthenticationBackend
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -9,7 +10,9 @@ from django.contrib.auth import \
     logout as django_logout, \
     get_user_model
 
-from config.settings.base import CONFIG_SECRET_DEPLOY_FILE
+from config.settings.base import CONFIG_SECRET_DEPLOY_FILE, AUTHENTICATION_BACKENDS
+from member import CustomBasicAuthentication
+from member.CustomBasicAuthentication import CustomBasicAuthenticationWithEmail
 from member.forms import LoginForm
 
 __all__ = (
@@ -27,7 +30,7 @@ def login(request):
         form = LoginForm(data=request.POST)
         if form.is_valid():
             user = form.cleaned_data['user']
-            django_login(request, user)
+            django_login(request, user, backend=AUTHENTICATION_BACKENDS[0])
             next = request.GET.get('next')
             if next:
                 return redirect(next)

@@ -131,9 +131,9 @@ SOCIALACCOUNT_PROVIDERS = \
 AUTHENTICATION_BACKENDS = (
     # eeded to login by username in Django admin, regardless of `allauth'
     # 'django.contrib.auth.backends.ModelBackend',
-    'member.CustomBasicAuthenticationCustomBasicAuthenticationWithEmail',
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
+    'member.CustomBasicAuthentication.CustomBasicAuthenticationWithEmail',
 
 )
 # REST-AUTH 에서 로그인 시리얼 라이저는 커스텀(email 필드 제거)한 시리얼라이저를 사용합니다.
