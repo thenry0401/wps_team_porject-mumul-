@@ -1,12 +1,15 @@
+from allauth.account.auth_backends import AuthenticationBackend
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.naver.views import NaverOAuth2Adapter
 from django.conf import settings
+from django.contrib.auth.backends import ModelBackend
 from rest_auth.app_settings import create_token
 from rest_auth.models import TokenModel
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.utils import jwt_encode
 from rest_auth.views import LoginView
-from rest_framework import generics, permissions
+from rest_framework import generics, status, permissions
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
@@ -14,7 +17,7 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from member.serializers import UserLoginSerializer, FacebookLoginSerializer, UserFastCreationSerializer
 from member.serializers.user_login_serializers import NaverLoginSerializer
 from member.serializers.user_serializers import PaginatedUserSerializer, UserSerializer, UserCreationSerializer
-from utils import ObjectIsRequestUser
+from utils.permissions import ObjectIsRequestUser
 
 from ..models import User
 
@@ -26,6 +29,7 @@ __all__ = (
     'NaverLoginView',
     'UserRetrieveUpdateDestroyView',
 )
+
 
 class UserListView(generics.ListCreateAPIView):
     queryset = User.objects.all()
@@ -40,9 +44,8 @@ class UserListView(generics.ListCreateAPIView):
 
 
 class UserLoginView(LoginView):
-
     queryset = User.objects.all()
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
     serializer_class = UserLoginSerializer
     token_model = TokenModel
 
@@ -56,6 +59,7 @@ class UserLoginView(LoginView):
 
         if getattr(settings, 'REST_SESSION_LOGIN', True):
             self.process_login()
+
 
 class UserCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
@@ -82,10 +86,51 @@ class UserCreateView(generics.ListCreateAPIView):
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()  # 객체 하나를 가져와야 한다. 그런데 all()로 가져옴. 제네릭API뷰가 특정 오브젝트를 하나 들고온다.
     serializer_class = UserSerializer
+    # authentication_classes = (CustomBasicAuthenticationWithEmail,)
+    authentication_classes = (BasicAuthentication, SessionAuthentication, )
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
-        ObjectIsRequestUser,  # 쿼리셋 자체가 유저기 때문에 유저 자체를 비교해야 함
+        ObjectIsRequestUser
     )
+
+    def get_object(pk):
+        # /api/member/<유저 pk> 로 접근했을 때 해당 user를 리턴해주는 유용한 GenericAPIView의 메서드입니다.
+        try:
+            user = super().get_object()
+            return user
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, *args, **kwargs):
+        print("@@@@@@@@@@@ GET 이건뭐지 : ", request)
+        print("@@@@@@@@@@@ GET 이건뭐지 args: ", args)
+        print("@@@@@@@@@@@ GET 이건뭐지 kwargs: ", kwargs)
+        return self.retrieve(request, *args, **kwargs)
+
+    # update
+    def put(self, request, pk):
+        user = self.get_object(pk)
+        serializer = UserSerializer(user, request, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # partial update
+    def patch(self, request, pk):
+        user = self.get_object(pk)
+        serializer = UserSerializer(user, request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        print("@@@@ request :", request)
+        print("@@@@ pk :", pk)
+        user = self.get_object()
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class FacebookLoginView(SocialLoginView):
