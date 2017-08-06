@@ -1,7 +1,8 @@
 import json
 
 from allauth import exceptions
-from django.contrib.auth import authenticate
+from allauth.socialaccount.helpers import complete_social_login
+from requests import HTTPError
 from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
@@ -13,6 +14,7 @@ from django.conf import settings
 __all__ = (
     'UserLoginSerializer',
     'FacebookLoginSerializer',
+    'NaverLoginSerializer',
 )
 
 
@@ -64,9 +66,6 @@ class UserLoginSerializer(LoginSerializer):
 
 
 
-
-
-
 class FacebookLoginSerializer(SocialLoginSerializer):
     """페이스북 로그인을 통한 Login Serializer"""
 
@@ -80,3 +79,50 @@ class FacebookLoginSerializer(SocialLoginSerializer):
     #     del fields['code']
     #
     #     return fields
+
+    def get_social_login(self, adapter, app, token, response):
+        request = self._get_request()
+        social_login = adapter.complete_login(request, app, token, response=response)
+        social_login.token = token
+        return social_login
+
+    def validate(self, attrs):
+        view = self.context.get('view')
+        request = self._get_request()
+        if not view:
+            raise serializers.ValidationError(
+                _("View is not defined, pass it as a context variable")
+            )
+
+        adapter_class = getattr(view, 'adapter_class', None)
+        if not adapter_class:
+            raise serializers.ValidationError(_("Define adapter_class in view"))
+
+        adapter = adapter_class(request)
+        app = adapter.get_provider().get_app(request)
+
+        if attrs.get('access_token'):
+            access_token = attrs.get('access_token')
+        else:
+            raise serializers.ValidationError(
+                _("Incorrect input. access_token is required."))
+
+        social_token = adapter.parse_token({'access_token': access_token})
+        social_token.app = app
+
+        try:
+            login = self.get_social_login(adapter, app, social_token, access_token)
+            complete_social_login(request, login)
+        except HTTPError:
+            raise serializers.ValidationError(_('Incorrect value'))
+
+        if not login.is_existing:
+            login.lookup()
+            login.save(request, connect=True)
+        attrs['user'] = login.account.user
+        return attrs
+
+
+class NaverLoginSerializer(SocialLoginSerializer):
+    """네이버 로그인을 통한 Login Serializer"""
+    pass

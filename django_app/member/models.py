@@ -10,9 +10,10 @@ from utils.fields.custom_imagefield import CustomImageField
 
 
 class UserManager(DefaultUserManager):
-
-    def create_user(self, email, password, **kwargs):
+    def create_user(self, email, password=None, name=None, nickname=None, **kwargs):
         user = self.model(email=self.normalize_email(email), is_active=True, **kwargs)
+        user.name = name
+        user.nickname = nickname
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -27,7 +28,6 @@ class UserManager(DefaultUserManager):
         user.save(using=self._db)
         return user
 
-
     # 페이스북으로 가입하면 user_type을 F(Facebook)으로 지정한다.
     def get_or_create_facebook_user(self, user_pk, extra_data, profile_url):
         print(extra_data)
@@ -38,13 +38,14 @@ class UserManager(DefaultUserManager):
 
         # 프로필 이미지를 저장합니다.
         try:
-            response = request('GET', profile_url, params={'type' : 'large'})
+            response = request('GET', profile_url, params={'type': 'large'})
             response.raise_for_status()
         except HTTPError:
             pass
         else:
-            temp_file = NamedTemporaryFile(delete=False) # 임시 파일을 하나 생성
-            user.profile_image.save('{0}_{1}_social_facebook.jpg'.format(extra_data['id'], user.username), ContentFile(response.content))
+            temp_file = NamedTemporaryFile(delete=False)  # 임시 파일을 하나 생성
+            user.profile_image.save('{0}_{1}_social_facebook.jpg'.format(extra_data['id'], user.username),
+                                    ContentFile(response.content))
             temp_file.write(response.content)
 
         user.save()
@@ -52,7 +53,7 @@ class UserManager(DefaultUserManager):
         return user
 
     # 네이버로 가입하면 user_type을 N(Naver)으로 지정한다. 그외에 추가적인 정보를 커스텀 저장을 한다.
-    def get_or_create_naver_user(self, user_pk, extra_data):
+    def get_or_create_naver_user2(self, user_pk, extra_data):
         print(extra_data)
         user = User.objects.get(pk=user_pk)
         user.email = extra_data['email']
@@ -62,6 +63,21 @@ class UserManager(DefaultUserManager):
         user.save()
 
         return user
+
+    def get_or_create_naver_user(self, extra_data, password=None):
+        user, user_created = self.get_or_create(
+            email=extra_data['email'],
+            profile_image=extra_data['profile_image'],
+            user_type="N",
+            name=extra_data['name'],
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def get_by_natural_key(self, email):
+        return self.get(email=email)
 
 
 class User(AbstractUser):
@@ -75,7 +91,7 @@ class User(AbstractUser):
     )
 
     user_type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES, default='D')
-    name = models.CharField(max_length=15, blank=True, null=True) # 유저의 실제 이름
+    name = models.CharField(max_length=15, blank=True, null=True)  # 유저의 실제 이름
     username = models.CharField(max_length=30, unique=False)
     nickname = models.CharField(max_length=15, unique=True, null=True)
     email = models.EmailField(max_length=255, unique=True)
@@ -86,7 +102,7 @@ class User(AbstractUser):
     profile_image = CustomImageField(
         upload_to='user_profile_img',
         blank=True,
-        default_static_image='',
+        default_static_image='images/no_profile_image.jpg',
     )
 
     USERNAME_FIELD = 'email'
@@ -101,8 +117,5 @@ class User(AbstractUser):
     def get_username(self):
         return self.email
 
-    def get_full_name(self):
-        return self.email
 
-    def get_short_name(self):
-        return self.email
+
