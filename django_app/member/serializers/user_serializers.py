@@ -117,17 +117,6 @@ class UserCreationSerializer(serializers.ModelSerializer):
                                         )
         return user
 
-    # def save(self, *args, **kwargs):
-    #     print("@@@@@@@@@@@@@@@@@ ", self.email, self.password, self.name, self.nickname)
-    #     user = User.objects.create_user(
-    #         email=self.validated_data.get('email', ''),
-    #         password=self.validated_data.get('password1', ''),
-    #         name=self.validated_data.get('name', ''),
-    #         nickname=self.validated_data.get('nickname', ''),
-    #     )
-    #     user.save()
-    #     return user
-
 
 class PaginatedUserSerializer(PageNumberPagination):
     """

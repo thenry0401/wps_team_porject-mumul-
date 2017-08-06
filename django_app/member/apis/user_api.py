@@ -71,17 +71,6 @@ class UserCreateView(generics.ListCreateAPIView):
         elif self.request.method == 'POST':
             return UserCreationSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = UserCreationSerializer(data=request.data)
-        if serializer.is_valid():
-            User.objects.create_user(
-                email=serializer.data['email'],
-                name=serializer.data['name'],
-                nickname=serializer.data['nickname'],
-            )
-            return Response(serializer.data, status=HTTP_201_CREATED)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-
 
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()  # 객체 하나를 가져와야 한다. 그런데 all()로 가져옴. 제네릭API뷰가 특정 오브젝트를 하나 들고온다.
