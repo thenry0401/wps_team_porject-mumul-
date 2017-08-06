@@ -14,6 +14,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
+from member.CustomBasicAuthentication import CustomBasicAuthenticationWithEmail
 from member.serializers import UserLoginSerializer, FacebookLoginSerializer, UserFastCreationSerializer
 from member.serializers.user_login_serializers import NaverLoginSerializer
 from member.serializers.user_serializers import PaginatedUserSerializer, UserSerializer, UserCreationSerializer
@@ -75,25 +76,23 @@ class UserCreateView(generics.ListCreateAPIView):
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()  # 객체 하나를 가져와야 한다. 그런데 all()로 가져옴. 제네릭API뷰가 특정 오브젝트를 하나 들고온다.
     serializer_class = UserSerializer
-    # authentication_classes = (CustomBasicAuthenticationWithEmail,)
-    authentication_classes = (BasicAuthentication, SessionAuthentication, )
+    authentication_classes = (CustomBasicAuthenticationWithEmail, )
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
     )
 
     def get_object(pk):
-        # /api/member/<유저 pk> 로 접근했을 때 해당 user를 리턴해주는 유용한 GenericAPIView의 메서드입니다.
+        """
+        /api/member/<유저 pk> 로 접근했을 때 해당 user를 리턴해주는 GenericAPIView의 유용한 메서드입니다.
+        """
         try:
             user = super().get_object()
             return user
-        except User.DoesNotExist:
+        except User.DoesNotExist: # pk로 찾는 유저가 없을 때 404 Error를 띄웁니다.
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, *args, **kwargs):
-        print("@@@@@@@@@@@ GET 이건뭐지 : ", request)
-        print("@@@@@@@@@@@ GET 이건뭐지 args: ", args)
-        print("@@@@@@@@@@@ GET 이건뭐지 kwargs: ", kwargs)
         return self.retrieve(request, *args, **kwargs)
 
     # update
@@ -115,8 +114,6 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        print("@@@@ request :", request)
-        print("@@@@ pk :", pk)
         user = self.get_object()
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
