@@ -40,6 +40,9 @@
                     <button type="submit">네이버 로그인</button>
                 </form></div>
                 <a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={{ naver_app_id }}&state={{ csrf_token|urlencode }}&redirect_uri={% filter urlencode %}{{ request.scheme }}://localhost:8000{% url 'member:naver_login' %}{% endfilter %}">네이버 로그인 테스트</a>
+                <!--<a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={{ naver_app_id }}&state={{ csrf_token|urlencode }}&redirect_uri={% filter urlencode %}{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'member:naver_login' %}{% endfilter %}">네이버 로그인 테스트</a>-->
+
+
                 {% endif %}
             </div>
             <div>
