@@ -3,16 +3,20 @@ from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.naver.views import NaverOAuth2Adapter
 from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
+from django.utils import timezone
 from rest_auth.app_settings import create_token
 from rest_auth.models import TokenModel
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.utils import jwt_encode
 from rest_auth.views import LoginView
-from rest_framework import generics, status, permissions
+from rest_framework import generics, status, permissions, parsers, renderers
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.views import APIView
 
 from member.CustomBasicAuthentication import CustomBasicAuthenticationWithEmail
 from member.serializers import UserLoginSerializer, FacebookLoginSerializer, UserFastCreationSerializer
@@ -44,22 +48,27 @@ class UserListView(generics.ListCreateAPIView):
             return UserFastCreationSerializer
 
 
-class UserLoginView(LoginView):
-    queryset = User.objects.all()
-    permission_classes = (AllowAny,)
+# class UserLoginView(LoginView):
+#     queryset = User.objects.all()
+#     permission_classes = (AllowAny, )
+#     serializer_class = UserLoginSerializer
+#     token_model = TokenModel
+
+class UserLoginView(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer, )
     serializer_class = UserLoginSerializer
-    token_model = TokenModel
 
-    def login(self):
-        self.user = self.serializer.validated_data['user']
-        if getattr(settings, 'REST_USE_JWT', False):
-            self.token = jwt_encode(self.user)
-        else:
-            self.token = create_token(self.token_model, self.user,
-                                      self.serializer)
-
-        if getattr(settings, 'REST_SESSION_LOGIN', True):
-            self.process_login()
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=email)
+        email.last_login = timezone.now()
+        email.save(update_fields=['last_login'])
+        return Response({'token': token.key})
 
 
 class UserCreateView(generics.ListCreateAPIView):
