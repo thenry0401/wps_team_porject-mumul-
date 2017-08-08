@@ -13,7 +13,7 @@ urlpatterns = [
 
     # 로그인 관련 처리 뷰
     url(r'^login/', apis.UserLoginView.as_view(), name='login'),
-    url(r'^fb-login/$', apis.FacebookLoginView.as_view(), name='fb_login'),
+    url(r'^fb-login/$', apis.FacebookLogin.as_view(), name='fb_login'),
     url(r'^naver-login/$', apis.NaverLoginView.as_view(), name='nv_login'),
 
 ]

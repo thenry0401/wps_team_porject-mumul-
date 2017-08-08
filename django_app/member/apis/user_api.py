@@ -30,7 +30,7 @@ __all__ = (
     'UserListView',
     'UserLoginView',
     'UserCreateView',
-    'FacebookLoginView',
+    # 'FacebookLoginView',
     'NaverLoginView',
     'UserRetrieveUpdateDestroyView',
 )
@@ -128,9 +128,9 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class FacebookLoginView(SocialLoginView):
-    adapter_class = FacebookOAuth2Adapter
-    serializer_class = FacebookLoginSerializer
+# class FacebookLoginView(SocialLoginView):
+#     adapter_class = FacebookOAuth2Adapter
+#     serializer_class = FacebookLoginSerializer
 
 
 class NaverLoginView(SocialLoginView):
