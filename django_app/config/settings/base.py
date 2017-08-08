@@ -98,8 +98,9 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = 'nickname'
 ACCOUNT_USERNAME_REQUIRED = False
 
 ## 소셜 계정으로 가입하는 경우 추가 정보를 기입하기 위한 설정입니다.
-SOCIALACCOUNT_ADAPTER = 'member.views.SocialAccountAdapter'
-SOCIALACCOUNT_AUTO_SIGNUP = True
+# SOCIALACCOUNT_ADAPTER = 'member.views.SocialAccountAdapter'
+# SOCIALACCOUNT_ADAPTER = 'member.apis.fb_user_login.CustomFacebookOAuth2Adapter'
+# SOCIALACCOUNT_AUTO_SIGNUP = True
 
 ## 커스텀 SignUp 폼을 사용합니다.
 ACCOUNT_SIGNUP_FORM_CLASS = 'member.forms.UserSignUpForm'
