@@ -1,4 +1,3 @@
-
 from allauth.socialaccount.providers.facebook.provider import FacebookProvider, GRAPH_API_URL
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter, fb_complete_login, \
     compute_appsecret_proof

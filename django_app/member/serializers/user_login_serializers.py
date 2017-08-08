@@ -1,16 +1,19 @@
-import json
-
 from allauth.account.auth_backends import AuthenticationBackend
 from allauth.socialaccount.helpers import complete_social_login
-from django.contrib.auth import authenticate, get_user_model
-from requests import HTTPError, exceptions
+from requests import HTTPError
 from rest_auth.registration.serializers import SocialLoginSerializer
-from rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 from django.utils.translation import ugettext_lazy as _
 
-from config.settings.base import CONFIG_SECRET_DEPLOY_FILE
-from django.conf import settings
+from allauth.socialaccount.providers.facebook.provider import FacebookProvider, GRAPH_API_URL
+from allauth.socialaccount.providers.facebook.views import compute_appsecret_proof
+from django.contrib.auth import get_user_model
+from django.db import IntegrityError
+from requests import request
+import requests
+from django.core.files.base import File
+from django.core.files.temp import NamedTemporaryFile
+from allauth.socialaccount import providers
 
 __all__ = (
     'UserLoginSerializer',
@@ -52,8 +55,6 @@ class UserLoginSerializer(serializers.Serializer):
 
 class FacebookLoginSerializer(SocialLoginSerializer):
     """페이스북 로그인을 통한 Login Serializer"""
-    # access token : EAAEDqblrwHUBACLFSfFEp56sY5nr5k67sylLQFuoK4Ycr3VwuLKcQc5gOtFnWGXiXQnuDfTp6ZCbHieJnDhKMImCZAp52GE7nASw2oZCyGFrlKT7lrtRtKEccubsmcOoJscepQaKZCPTyUhzCnlqfIg6bs35aQptFpVU6uSPJQZDZD
-    # code : AQAl3yHRk-qsGch_iPGSveLRa8MNR3Y1FHV5keqh6nkCqOkdxQNDk1m8kJ3og2aVG4Cs_GI45JWlWNj4LodKldOytk-4k2lwJXqtE2H0inWLIUMz-sKdPfciIeCuhUCSihBui8r4fyuayXyChM42WkZqevp5CAg6elvqb17j26Rz2ypbtGKJllaT7QGF_7ko4M-0dq3srmTAnJezuvsh4D81k56hGgaamUnItVuUcMdhpgYiaLVpNhDSeOZiq0WEtMUGZaUD63FW0C3mSz0Yjcw7j9oQCDy0Kgcb61WbOPNo_iMZkti5EFD99MXW_ctYv61a4_uD8pOkJ96jpgSA1pUL
     def get_social_login(self, adapter, app, token, response):
         request = self._get_request()
         social_login = adapter.complete_login(request, app, token, response=response)
