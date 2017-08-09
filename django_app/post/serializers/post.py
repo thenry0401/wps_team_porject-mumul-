@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from member.serializers import UserSerializer
 from ..models import Post
 
 __all__ = (
@@ -8,6 +9,7 @@ __all__ = (
 
 
 class PostSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
 
     class Meta:
         model = Post
