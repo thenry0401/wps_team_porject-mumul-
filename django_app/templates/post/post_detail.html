@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div>
+    <p>제목: {{ post.title }}</a></p>
+    <p>작성자: {{ post.author }}</p>
+    <p>내용: {{ post.content }}</p>
+    <p>지역: {{ post.road_address }} {{ post.detail_address }}</p>
+    <p>거래방식: {{ post.trading_type }}</p>
+</div>
+<div>
+    {% for comment in post.comment_set.all %}
+        <div>
+            <span>{{ commnet.author }}</span>
+            <span>{{ comment.content }}</span>
+            {% if request.user == comment.author %}
+                <span>
+                    <a href="{% url 'post:comment_modify' comment_pk=comment.pk %}">
+                        <button type="submit">수정</button>
+                    </a>
+                </span>
+                <span>
+                    <form action="{% url 'post:comment_delete' comment_pk=comment.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">삭제</button>
+                    </form>
+                </span>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+<form action="{% url 'post:comment_create' post_pk=post.pk %}" method="POST">
+    {% csrf_token %}
+    {{ comment_form }}
+</form>
+
+<button>
+    <a href="{% url 'post:post_list' %}">메인 페이지</a>
+</button>
+{% endblock %}

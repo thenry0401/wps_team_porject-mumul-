@@ -81,6 +81,7 @@ INSTALLED_APPS += [
 config_secret_deploy = json.loads(open(CONFIG_SECRET_DEPLOY_FILE).read())
 FACEBOOK_APP_ID = config_secret_deploy['facebook']['SOCIAL_AUTH_FACEBOOK_KEY']
 
+
 SITE_ID = 1
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 LOGIN_REDIRECT_URL = "/"

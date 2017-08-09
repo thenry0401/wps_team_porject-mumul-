@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div>
+    <p>게시물 ({{post.title}})을 정말 삭제하시겠습니까?</p>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <button type="submit">삭제하기</button>
+    </form>
+    <button>
+        <a href="{% url 'post:post_list' %}">이전 페이지</a>
+    </button>
+</div>
+{% endblock %}
