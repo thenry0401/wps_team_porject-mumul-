@@ -28,4 +28,7 @@ class PostSerializer(serializers.ModelSerializer):
             'category',
             'trading_type',
         )
+        read_only_fields = (
+            'author',
+        )
 

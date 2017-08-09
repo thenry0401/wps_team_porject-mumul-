@@ -28,6 +28,8 @@ urlpatterns = [
     # url(r'^api-token-auth/', obtain_auth_token),
 
     url(r'^post/', include('post.urls.urls_views')),
+
+    # url(r'^api-token-auth/', obtain_auth_token),
 ]
 
 # /static/에 대한 요청을 STATIC_ROOT 경로의 파일에서 찾는다
