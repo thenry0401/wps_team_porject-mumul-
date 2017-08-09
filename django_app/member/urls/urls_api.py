@@ -16,4 +16,11 @@ urlpatterns = [
     url(r'^fb-login/$', apis.FacebookLogin.as_view(), name='fb_login'),
     url(r'^naver-login/$', apis.NaverLogin.as_view(), name='nv_login'),
 
+    #################
+    ## 마이 페이지
+    #################
+
+    # 유저가 좋아요 한 목록
+    url(r'wish-list/', apis.MyWishList.as_view(), name='user_wishlist')
+
 ]
