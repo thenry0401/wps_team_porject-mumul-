@@ -65,3 +65,11 @@ class PostDetailView(APIView):
         post = self.get_object(post_pk)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PostLikeToggleView(APIView):
+    pass
+
+
+class PostSearchView(APIView):
+    pass

@@ -3,10 +3,13 @@ from rest_auth.views import LoginView
 from rest_framework import generics, status, permissions, parsers, renderers
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from member.CustomBasicAuthentication import CustomBasicAuthenticationWithEmail
 from member.serializers import UserLoginSerializer
 from member.serializers.user_serializers import PaginatedUserSerializer, UserSerializer, UserCreationSerializer
+from post.models import Post, PostLike
+from post.serializers.post import PostInfoSerializer
 from utils.permissions import ObjectIsRequestUser
 
 from ..models import User
@@ -15,6 +18,9 @@ __all__ = (
     'UserListView',
     'UserLoginView',
     'UserRetrieveUpdateDestroyView',
+
+    'MyWishList',
+    'WishListToggleView',
 )
 
 
@@ -92,3 +98,43 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class MyWishList(generics.ListAPIView):
+    authentication_classes = (CustomBasicAuthenticationWithEmail, )
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+    serializer_class = PostInfoSerializer
+    pagination_class = PaginatedUserSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        items = Post.objects.filter(like_users=user.pk)
+        return items.all()
+
+class WishListToggleView(APIView):
+    authentication_classes = (CustomBasicAuthenticationWithEmail, )
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
+    def get(self, request, pk):
+        user = User.objects.get(id=request.user.id)
+        try:
+            post = Post.objects.get(pk=pk)
+            if post.author != user:
+                if post.pk in user.my_wishlist.values_list('post', flat=True):
+                    wishlist = PostLike.objects.filter(user=user, post=post)
+                    wishlist.delete()
+                    return Response(status=status.HTTP_200_OK,
+                                    data={'detail': '매물 [{}]이(가) wishlist에서 삭제되었습니다.'.format(post.title)})
+                else:
+                    PostLike.objects.create(user=user, post=post)
+                    return Response(status=status.HTTP_201_CREATED,
+                                    data={'detail': '매물 [{}]이(가) wishlist에 추가되었습니다.'.format(post.title)})
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': '본인의 매물을 위시리스트에 담을 수 없습니다.'})
+        except Post.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND, data={'detail': '해당 매물을 찾을 수 없습니다.'})
