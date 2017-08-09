@@ -12,6 +12,12 @@ __all__ = (
 )
 
 
+__all__ = (
+    'PostListCreateView',
+    'PostDetailView',
+)
+
+
 class PostListCreateView(APIView):
 
     def get(self, request, *args, **kwargs):
