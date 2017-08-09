@@ -5,15 +5,7 @@ from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_framework import serializers
 from django.utils.translation import ugettext_lazy as _
 
-from allauth.socialaccount.providers.facebook.provider import FacebookProvider, GRAPH_API_URL
-from allauth.socialaccount.providers.facebook.views import compute_appsecret_proof
 from django.contrib.auth import get_user_model
-from django.db import IntegrityError
-from requests import request
-import requests
-from django.core.files.base import File
-from django.core.files.temp import NamedTemporaryFile
-from allauth.socialaccount import providers
 
 __all__ = (
     'UserLoginSerializer',
@@ -55,6 +47,7 @@ class UserLoginSerializer(serializers.Serializer):
 
 class FacebookLoginSerializer(SocialLoginSerializer):
     """페이스북 로그인을 통한 Login Serializer"""
+
     def get_social_login(self, adapter, app, token, response):
         request = self._get_request()
         social_login = adapter.complete_login(request, app, token, response=response)

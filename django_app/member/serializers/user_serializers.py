@@ -10,6 +10,7 @@ __all__ = (
     'UserSerializer',
     'UserFastCreationSerializer',
     'UserCreationSerializer',
+    'PaginatedUserSerializer',
 )
 
 
