@@ -40,6 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
             'nickname',
             'name',
             'email',
+            'profile_image',
             'user_type',
             'post_code', 'road_address', 'detail_address',
             'date_joined', 'last_login'

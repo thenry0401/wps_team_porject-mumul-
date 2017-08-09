@@ -23,7 +23,7 @@ User = get_user_model()
 def fb_profile_image_url_save(login):
     profile_url = "https://graph.facebook.com/v2.4/{user_id}/picture" \
                   "?type=square&height={height}&width={width}" \
-                  "&return_ssl_rources=1".format(
+                  "&return_ssl_resources=1".format(
                         user_id=login.user,
                         height=150,
                         width=150,

@@ -56,12 +56,12 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         ObjectIsRequestUser
     )
 
-    def get_object(pk):
+    def get_object_user(self, pk):
         """
         /api/member/<유저 pk> 로 접근했을 때 해당 user를 리턴해주는 GenericAPIView의 유용한 메서드입니다.
         """
         try:
-            user = super().get_object()
+            user = User.objects.get(pk=pk)
             return user
         except User.DoesNotExist: # pk로 찾는 유저가 없을 때 404 Error를 띄웁니다.
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -71,8 +71,8 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     # update
     def put(self, request, pk):
-        user = self.get_object(pk)
-        serializer = UserSerializer(user, request, partial=True)
+        user = self.get_object_user(pk)
+        serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
