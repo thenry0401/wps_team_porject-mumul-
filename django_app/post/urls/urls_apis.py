@@ -10,5 +10,5 @@ urlpatterns = [
 
 
     # ##### 위시리스트 추가/삭제 #####
-    url(r'^(?P<pk>[0-9]+)/wish-list/toggle/$', member_apis.WishListToggleView.as_view(), name='wishlist-toggle'),
+    url(r'^(?P<pk>[0-9]+)/wish-list/toggle/$', member_apis.PostLikeToggleView.as_view(), name='wishlist-toggle'),
 ]

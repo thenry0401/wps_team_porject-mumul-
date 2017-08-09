@@ -20,7 +20,7 @@ __all__ = (
     'UserRetrieveUpdateDestroyView',
 
     'MyWishList',
-    'WishListToggleView',
+    'PostLikeToggleView',
 )
 
 
@@ -113,7 +113,7 @@ class MyWishList(generics.ListAPIView):
         items = Post.objects.filter(like_users=user.pk)
         return items.all()
 
-class WishListToggleView(APIView):
+class PostLikeToggleView(APIView):
     authentication_classes = (CustomBasicAuthenticationWithEmail, )
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
