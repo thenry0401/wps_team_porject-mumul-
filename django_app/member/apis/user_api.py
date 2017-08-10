@@ -9,7 +9,7 @@ from member.CustomBasicAuthentication import CustomBasicAuthenticationWithEmail
 from member.serializers import UserLoginSerializer
 from member.serializers.user_serializers import PaginatedUserSerializer, UserSerializer, UserCreationSerializer
 from post.models import Post, PostLike
-from post.serializers.post import PostInfoSerializer
+from post.serializers.post import PostSimpleInfoSerializer
 from utils.permissions import ObjectIsRequestUser
 
 from ..models import User
@@ -105,7 +105,7 @@ class MyWishList(generics.ListAPIView):
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
     )
-    serializer_class = PostInfoSerializer
+    serializer_class = PostSimpleInfoSerializer
     pagination_class = PaginatedUserSerializer
 
     def get_queryset(self):
