@@ -76,6 +76,13 @@ class User(AbstractUser):
         blank=True,
         default_static_image='images/no_profile_image.jpg',
     )
+
+    relations = models.ManyToManyField(
+        'self',                 # 유저테이블끼리의 인스턴스간 관계를 가리키기 위해 'self'를 사용
+        through='Relation',     # member_relation 테이블이 새로 생긴다.
+        symmetrical=False,
+    )
+
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname']
@@ -86,3 +93,26 @@ class User(AbstractUser):
     def __str__(self):
         return self.nickname or self.email
 
+class Relation(models.Model):
+    # 같은 중요도로 참조할 수 있어야 한다.
+    from_user = models.ForeignKey(
+        User,
+        related_name="follow_relations"
+        # User가 두 군데서 쓰이기 때문에 역참조가 필요. 여기다가 역참조(relate_name)을 쓰면 User에서 접근이 가능하다.
+    )
+    to_user = models.ForeignKey(
+        User,
+        related_name="follower_relations"  # 나를 팔로우하고 있는 사람들
+    )
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return 'Relation from({}) to ({})'.format(
+            self.from_user,
+            self.to_user,
+        )
+
+    class Meta:
+        unique_together = (
+            ('from_user', 'to_user'),
+        )
