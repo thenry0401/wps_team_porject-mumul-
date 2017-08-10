@@ -22,7 +22,7 @@ __all__ = (
     'MyWishList',
 
     'PostLikeToggle',
-    'FollowingToggle',
+    'UserFollowingToggle',
 )
 
 
@@ -142,7 +142,7 @@ class PostLikeToggle(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND, data={'detail': '해당 매물을 찾을 수 없습니다.'})
 
 
-class FollowingToggle(APIView):
+class UserFollowingToggle(APIView):
     authentication_classes = (CustomBasicAuthenticationWithEmail, )
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,

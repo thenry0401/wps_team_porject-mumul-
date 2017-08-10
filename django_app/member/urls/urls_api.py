@@ -28,6 +28,6 @@ urlpatterns = [
     #################
 
     # 팔로잉 / 언팔로잉
-    url(r'^follow-toggle/(?P<user_pk>\d+)/$', apis.FollowingToggle.as_view(), name='following_toggle'),
+    url(r'^follow-toggle/(?P<user_pk>\d+)/$', apis.UserFollowingToggle.as_view(), name='following_toggle'),
 
 ]
