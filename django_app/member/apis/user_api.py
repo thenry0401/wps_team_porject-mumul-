@@ -20,7 +20,9 @@ __all__ = (
     'UserRetrieveUpdateDestroyView',
 
     'MyWishList',
-    'PostLikeToggleView',
+
+    'PostLikeToggle',
+    'FollowingToggle',
 )
 
 
@@ -113,7 +115,7 @@ class MyWishList(generics.ListAPIView):
         items = Post.objects.filter(like_users=user.pk)
         return items.all()
 
-class PostLikeToggleView(APIView):
+class PostLikeToggle(APIView):
     authentication_classes = (CustomBasicAuthenticationWithEmail, )
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -138,3 +140,12 @@ class PostLikeToggleView(APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': '본인의 매물을 위시리스트에 담을 수 없습니다.'})
         except Post.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND, data={'detail': '해당 매물을 찾을 수 없습니다.'})
+
+
+class FollowingToggle(APIView):
+    authentication_classes = (CustomBasicAuthenticationWithEmail, )
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
