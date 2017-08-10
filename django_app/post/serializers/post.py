@@ -11,7 +11,7 @@ __all__ = (
 
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    comments = CommentSerializer(read_only=True, many=True)
+    comments = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -39,3 +39,6 @@ class PostSerializer(serializers.ModelSerializer):
             'author',
         )
 
+    def get_comments(self, obj):
+        ordered_queryset = obj.comment_set.order_by('-pk')
+        return CommentSerializer(ordered_queryset, many=True).data
