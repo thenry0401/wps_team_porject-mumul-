@@ -8,4 +8,6 @@ urlpatterns = [
     url(r'^(?P<post_pk>\d+)/like-toggle/$', apis.PostLikeToggleView.as_view(), name='post_like'),
 
     url(r'^(?P<post_pk>\d+)/$', apis.PostDetailView.as_view()),
+
+    url(r'^(?P<post_pk>\d+)/comment-create/$', apis.CommentListCreateView.as_view(), name='comment_create'),
 ]
