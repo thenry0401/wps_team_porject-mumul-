@@ -64,7 +64,7 @@ class Post(models.Model):
 
 class PostLike(models.Model):
     post = models.ForeignKey(Post)
-    user = models.ForeignKey(settings.base.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.base.AUTH_USER_MODEL, related_name='my_wishlist')
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
