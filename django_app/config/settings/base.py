@@ -56,12 +56,15 @@ INSTALLED_APPS = [
     # The following apps are required:
     'django.contrib.sites',
 
+    # Third Party Library
     'django_extensions',
     'rest_framework',            # django-restframework 라이브러리
     'rest_framework.authtoken',  # django-rest-allauth 라이브러리
     'rest_auth',                 # django-rest-allauth 라이브러리
     'rest_auth.registration',    # django-rest-allauth 라이브러리
+    'corsheaders',
 
+    # Django App
     'member',
     'post',
     'utils',
@@ -155,11 +158,13 @@ REST_FRAMEWORK = {
     # 'MAX_PAGINATE_BY': 100             # Maximum limit allowed when using `?page_size=xxx`.
 
 }
-
-
 ######### django-rest-auth configuration end #########
 
+
 MIDDLEWARE = [
+    # django-cors-headers
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -168,6 +173,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+        'localhost:8080',
+        'mulmul.xyz',
+)
 
 ROOT_URLCONF = 'config.urls'
 
