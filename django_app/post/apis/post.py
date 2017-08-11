@@ -1,4 +1,5 @@
 from django.http import Http404
+from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -12,10 +13,12 @@ from ..models import Post
 __all__ = (
     'PostListCreateView',
     'PostDetailView',
+    'PostLikeToggleView',
+    'PostSearchView',
 )
 
 
-class PostListCreateView(APIView):
+class PostListCreateView_origin(APIView):
     authentication_classes = (CustomBasicAuthenticationWithEmail,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -35,7 +38,23 @@ class PostListCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PostDetailView(APIView):
+class PostListCreateView(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
+
+class PostDetailView_origin(APIView):
+    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
     def get_object(self, post_pk):
         try:
             return Post.objects.get(pk=post_pk)
@@ -61,8 +80,37 @@ class PostDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
+
 class PostLikeToggleView(APIView):
-    pass
+    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
+    def get_object(self, post_pk):
+        try:
+            return Post.objects.get(pk=post_pk)
+        except Post.DoesNotExist:
+            raise Http404
+
+    def get(self, request, post_pk):
+        post = self.get_object(post_pk)
+        post_like, post_like_created = post.postlike_set.get_or_create(
+            user=request.user
+        )
+        if not post_like_created:
+            post_like.delete()
+        return Response({'created': post_like_created})
 
 
 class PostSearchView(APIView):
