@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -19,9 +18,7 @@ __all__ = (
 )
 
 
-class PostListCreateView(generics.ListCreateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
+class PostListCreateView(APIView):
     authentication_classes = (CustomBasicAuthenticationWithEmail,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -33,8 +30,7 @@ class PostListCreateView(generics.ListCreateAPIView):
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
-    @login_required
-    def create(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(author=request.user)
@@ -42,9 +38,7 @@ class PostListCreateView(generics.ListCreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
+class PostDetailView(APIView):
     authentication_classes = (CustomBasicAuthenticationWithEmail,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -62,7 +56,6 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
         serializer = PostSerializer(post)
         return Response(serializer.data)
 
-    @login_required
     def put(self, request, post_pk):
         post = self.get_object(post_pk)
         serializer = PostSerializer(post, data=request.data)
@@ -71,7 +64,6 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @login_required
     def delete(self, request, post_pk):
         post = self.get_object(post_pk)
         post.delete()
@@ -84,13 +76,13 @@ class PostLikeToggleView(APIView):
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
     )
+
     def get_object(self, post_pk):
         try:
             return Post.objects.get(pk=post_pk)
         except Post.DoesNotExist:
             raise Http404
 
-    @login_required
     def get(self, request, post_pk):
         post = self.get_object(post_pk)
         post_like, post_like_created = post.postlike_set.get_or_create(
