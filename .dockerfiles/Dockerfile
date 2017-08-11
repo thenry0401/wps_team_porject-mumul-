@@ -20,6 +20,12 @@ COPY        .config/nginx/nginx-app.conf /etc/nginx/sites-available/nginx-app.co
 RUN         rm -rf /etc/nginx/sites-enabled/default
 RUN         ln -sf /etc/nginx/sites-available/nginx-app.conf /etc/nginx/sites-enabled/nginx-app.conf
 
+# front프로젝트 복사
+#WORKDIR     /srv
+#RUN         git clone <프론트엔드 github 주소> <복사할 디렉토리 이름 지정>
+#WORKDIR     /srv/front
+#RUN         npm install
+#RUN         npm run build
 
 # collectstatic 실행
 RUN  /root/.pyenv/versions/mulmul/bin/python /srv/mulmul/django_app/manage.py collectstatic --settings=config.settings.deploy --noinput
