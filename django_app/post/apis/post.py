@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -18,7 +19,7 @@ __all__ = (
 )
 
 
-class PostListCreateView(APIView):
+class PostListCreateView_origin(APIView):
     authentication_classes = (CustomBasicAuthenticationWithEmail,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -38,7 +39,17 @@ class PostListCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PostDetailView(APIView):
+class PostListCreateView(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
+
+class PostDetailView_origin(APIView):
     authentication_classes = (CustomBasicAuthenticationWithEmail,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -68,6 +79,16 @@ class PostDetailView(APIView):
         post = self.get_object(post_pk)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
 
 
 class PostLikeToggleView(APIView):
