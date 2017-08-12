@@ -7,14 +7,12 @@ MAINTAINER  dev@azelf.com
 RUN         apt-get -y update
 RUN         apt-get install -y python-pip
 RUN         apt-get install -y git vim
-RUN         apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
-libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils
+RUN         apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils
 
-# node, npm
-    # apt 안에 node 관련 패키지를 업데이트
+# node, npm // apt 안에 node 관련 패키지를 업데이트
 RUN         curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN         apt-get install -y --no-install-recommends apt-utils
 RUN         apt-get install -y nodejs
-
 
 # pyenv
 RUN         curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
@@ -24,7 +22,6 @@ RUN         pyenv install 3.6.1
 # zsh
 RUN         apt-get -y install zsh
 RUN         wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
-
 RUN         chsh -s /usr/bin/zsh
 
 # pyenv settings

@@ -20,6 +20,14 @@ COPY        .config/nginx/nginx-app.conf /etc/nginx/sites-available/nginx-app.co
 RUN         rm -rf /etc/nginx/sites-enabled/default
 RUN         ln -sf /etc/nginx/sites-available/nginx-app.conf /etc/nginx/sites-enabled/nginx-app.conf
 
+# front프로젝트 복사 (git clone <프론트엔드 github 주소> <복사할 디렉토리 이름 지정>)
+WORKDIR     /srv/front
+#RUN         git init
+#RUN         git remote add origin https://github.com/uchang7194/mulmul.git
+#RUN         git pull origin master
+RUN         git clone https://github.com/uchang7194/mulmul.git
+RUN         npm install
+RUN         npm run build
 
 # collectstatic 실행
 #RUN  /root/.pyenv/versions/deploy_eb_docker/bin/python /srv/deploy_eb_docker/django_app/manage.py collectstatic --settings=config.settings.deploy --noinput
