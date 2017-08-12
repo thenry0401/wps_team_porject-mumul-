@@ -1,8 +1,6 @@
 import json
 
 import requests
-from allauth.account.auth_backends import AuthenticationBackend
-from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import \
@@ -11,8 +9,6 @@ from django.contrib.auth import \
     get_user_model
 
 from config.settings.base import CONFIG_SECRET_DEPLOY_FILE, AUTHENTICATION_BACKENDS
-from member import CustomBasicAuthentication
-from member.CustomBasicAuthentication import CustomBasicAuthenticationWithEmail
 from member.forms import LoginForm
 
 __all__ = (

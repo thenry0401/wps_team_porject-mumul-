@@ -1,7 +1,5 @@
+from django.conf import settings
 from django.db import models
-
-from config import settings
-from config.settings.base import AUTH_USER_MODEL
 from post.models.others import Tag
 
 __all__ = (
@@ -11,7 +9,7 @@ __all__ = (
 
 
 class Post(models.Model):
-    author = models.ForeignKey(settings.base.AUTH_USER_MODEL)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL)
     title = models.CharField(max_length=30)
     content = models.TextField()
     photo = models.ImageField(upload_to='post', blank=False)
@@ -19,7 +17,7 @@ class Post(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag)
     like_users = models.ManyToManyField(
-        AUTH_USER_MODEL,
+        settings.AUTH_USER_MODEL,
         through='PostLike',
         related_name='like_posts'
     )
@@ -67,7 +65,7 @@ class Post(models.Model):
 
 class PostLike(models.Model):
     post = models.ForeignKey(Post)
-    user = models.ForeignKey(settings.base.AUTH_USER_MODEL, related_name='my_wishlist')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='my_wishlist')
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
