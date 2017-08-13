@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from member.CustomBasicAuthentication import CustomBasicAuthenticationWithEmail
 from utils import ObjectIsRequestUser
 from ..serializers import PostSerializer
 from ..models import Post
@@ -16,7 +15,6 @@ __all__ = (
 
 
 class PostListCreateView(APIView):
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser

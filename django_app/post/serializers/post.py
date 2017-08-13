@@ -2,19 +2,21 @@ from rest_framework import serializers
 
 from ..models import Post
 
-__all__ = (
+__all__ = [
     'PostSerializer',
     'PostSimpleInfoSerializer',
-)
+]
 
 class PostSerializer(serializers.ModelSerializer):
+
+    # author = UserSerializer(read_only=True)
 
     class Meta:
             model = Post
 
             fields = (
                 'pk',
-                'author',
+                # 'author',
                 'title',
                 'photo',
                 'content',
@@ -29,6 +31,11 @@ class PostSerializer(serializers.ModelSerializer):
                 'exchange_count',
                 'created_date',
                 'modified_date',
+            )
+
+            read_only_fields = (
+                'pk',
+                'author',
             )
 
 

@@ -1,11 +1,10 @@
-from allauth.account.auth_backends import AuthenticationBackend
 from allauth.socialaccount.helpers import complete_social_login
 from requests import HTTPError
 from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_framework import serializers
 from django.utils.translation import ugettext_lazy as _
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 
 __all__ = (
     'UserLoginSerializer',
@@ -25,8 +24,7 @@ class UserLoginSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         if email and password:
-            user = AuthenticationBackend._authenticate_by_email(
-                self=self,
+            user = authenticate(
                 email=email,
                 password=password,
             )

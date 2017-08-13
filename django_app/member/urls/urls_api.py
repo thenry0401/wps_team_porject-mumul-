@@ -16,6 +16,9 @@ urlpatterns = [
     url(r'^fb-login/$', apis.FacebookLogin.as_view(), name='fb_login'),
     url(r'^naver-login/$', apis.NaverLogin.as_view(), name='nv_login'),
 
+    # 토큰
+    # url(r'^token-auth/$', apis.UserAuthToken.as_view(), name='token_auth'),
+
     #################
     ## 마이 페이지
     #################

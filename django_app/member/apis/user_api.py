@@ -5,7 +5,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from member.CustomBasicAuthentication import CustomBasicAuthenticationWithEmail
 from member.serializers import UserLoginSerializer
 from member.serializers.user_serializers import PaginatedUserSerializer, UserSerializer, UserCreationSerializer
 from post.models import Post, PostLike
@@ -58,7 +57,6 @@ class UserLoginView(LoginView):
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()  # 객체 하나를 가져와야 한다. 그런데 all()로 가져옴. 제네릭API뷰가 특정 오브젝트를 하나 들고온다.
     serializer_class = UserSerializer
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
@@ -102,7 +100,7 @@ class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class MyWishList(generics.ListAPIView):
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+    authentication_classes = (permissions.IsAuthenticated,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
@@ -117,7 +115,7 @@ class MyWishList(generics.ListAPIView):
 
 
 class PostLikeToggle(APIView):
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+    authentication_classes = (permissions.IsAuthenticated,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
@@ -145,7 +143,7 @@ class PostLikeToggle(APIView):
 
 
 class UserFollowingToggle(APIView):
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+    authentication_classes = (permissions.IsAuthenticated,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser

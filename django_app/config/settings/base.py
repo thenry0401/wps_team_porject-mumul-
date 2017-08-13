@@ -98,8 +98,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # ACCOUNT_EMAIL_REQUIRED = True
 
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None # allauth에게 username 필드가 없음을 알린다.
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'nickname'
-ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = 'nickname'
+# ACCOUNT_USERNAME_REQUIRED = False
 
 ## 소셜 계정으로 가입하는 경우 추가 정보를 기입하기 위한 설정입니다.
 # SOCIALACCOUNT_ADAPTER = 'member.views.SocialAccountAdapter'
@@ -107,7 +107,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 # SOCIALACCOUNT_AUTO_SIGNUP = True
 
 ## 커스텀 SignUp 폼을 사용합니다.
-ACCOUNT_SIGNUP_FORM_CLASS = 'member.forms.UserSignUpForm'
+# ACCOUNT_SIGNUP_FORM_CLASS = 'member.forms.UserSignUpForm'
 
 
 SOCIALACCOUNT_PROVIDERS = \
@@ -133,21 +133,17 @@ SOCIALACCOUNT_PROVIDERS = \
           'VERSION': 'v2.4'},
      }
 
-AUTHENTICATION_BACKENDS = (
-    # eeded to login by username in Django admin, regardless of `allauth'
-    # 'django.contrib.auth.backends.ModelBackend',
-    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-    'member.CustomBasicAuthentication.CustomBasicAuthenticationWithEmail',
-
-)
 # REST-AUTH 에서 로그인 시리얼 라이저는 커스텀(email 필드 제거)한 시리얼라이저를 사용합니다.
 REST_AUTH_SERIALIZERS = {
-    'LOGIN_SERIALIZER': 'member.serializers.user_login_serializers.UserLoginSerializer', }
+    'LOGIN_SERIALIZER': 'member.serializers.user_login_serializers.UserLoginSerializer',
+}
 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
