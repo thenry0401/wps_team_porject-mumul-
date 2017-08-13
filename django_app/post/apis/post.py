@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from rest_framework import permissions
 from rest_framework import status
@@ -11,6 +12,8 @@ from ..models import Post
 __all__ = (
     'PostListCreateView',
     'PostDetailView',
+    'PostLikeToggleView',
+    'PostSearchView',
 )
 
 
@@ -34,6 +37,11 @@ class PostListCreateView(APIView):
 
 
 class PostDetailView(APIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
     def get_object(self, post_pk):
         try:
             return Post.objects.get(pk=post_pk)
@@ -60,7 +68,25 @@ class PostDetailView(APIView):
 
 
 class PostLikeToggleView(APIView):
-    pass
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
+    def get_object(self, post_pk):
+        try:
+            return Post.objects.get(pk=post_pk)
+        except Post.DoesNotExist:
+            raise Http404
+
+    def get(self, request, post_pk):
+        post = self.get_object(post_pk)
+        post_like, post_like_created = post.postlike_set.get_or_create(
+            user=request.user
+        )
+        if not post_like_created:
+            post_like.delete()
+        return Response({'created': post_like_created})
 
 
 class PostSearchView(APIView):

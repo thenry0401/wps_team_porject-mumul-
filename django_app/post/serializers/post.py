@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from member.serializers import UserSerializer
+from ..serializers.comment import CommentSerializer
 from ..models import Post
 
 __all__ = [
@@ -8,15 +10,15 @@ __all__ = [
 ]
 
 class PostSerializer(serializers.ModelSerializer):
-
-    # author = UserSerializer(read_only=True)
+    author = UserSerializer(read_only=True)
+    comments = serializers.SerializerMethodField()
 
     class Meta:
             model = Post
 
             fields = (
                 'pk',
-                # 'author',
+                'author',
                 'title',
                 'photo',
                 'content',
@@ -38,6 +40,9 @@ class PostSerializer(serializers.ModelSerializer):
                 'author',
             )
 
+    def get_comments(self, obj):
+        ordered_queryset = obj.comment_set.order_by('-pk')
+        return CommentSerializer(ordered_queryset, many=True).data
 
 class PostSimpleInfoSerializer(serializers.ModelSerializer):
     # SerializerMethodField는 메서드를 호출해 값을 얻어옵니다. get_<field_name> 메서드를 호출하게 됩니다.
@@ -53,6 +58,9 @@ class PostSimpleInfoSerializer(serializers.ModelSerializer):
             'content',
             'road_address',
             'detail_address',
+            'comments',
+
+            'like_users',
             'is_sold',
             'category',
             'trading_type',
