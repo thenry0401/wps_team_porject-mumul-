@@ -5,18 +5,17 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from member.CustomBasicAuthentication import CustomBasicAuthenticationWithEmail
 from post.models import Post, Comment
 from post.serializers import CommentSerializer
 from utils import ObjectIsRequestUser
 
 __all__ = (
     'CommentListCreateView',
+    'CommentDetailView'
 )
 
 
 class CommentListCreateView(APIView):
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
@@ -30,8 +29,42 @@ class CommentListCreateView(APIView):
 
     def post(self, request, post_pk):
         post = self.get_object(post_pk)
-        serializer = CommentSerializer(post)
+        serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(author=request.user)
+            serializer.save(
+                post=post,
+                author=request.user,
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CommentDetailView(APIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
+    def get_object(self, post_pk, comment_pk):
+        try:
+            return Comment.objects.get(post__id=post_pk, pk=comment_pk)
+        except Comment.DoesNotExist:
+            raise Http404
+
+    def get(self, request, post_pk, comment_pk):
+        comment = self.get_object(post_pk, comment_pk)
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
+
+    def put(self, request, post_pk, comment_pk):
+        comment = self.get_object(post_pk, comment_pk)
+        serializer = CommentSerializer(comment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, post_pk, comment_pk):
+        comment = self.get_object(post_pk, comment_pk)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -4,6 +4,7 @@ from post.models import Comment
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    post = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
@@ -13,3 +14,11 @@ class CommentSerializer(serializers.ModelSerializer):
             'content',
             'created_date',
         )
+
+        read_only_fields = (
+            'post',
+            'author',
+        )
+
+    def get_post(self, obj):
+        return obj.post.title
