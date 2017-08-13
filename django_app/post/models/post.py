@@ -61,6 +61,9 @@ class Post(models.Model):
     )
     trading_type = models.CharField(max_length=30, choices=TRADING_TYPE_CHOICES)
 
+    def __str__(self):
+        return self.title
+
 
 class PostLike(models.Model):
     post = models.ForeignKey(Post)

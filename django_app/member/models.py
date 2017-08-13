@@ -86,8 +86,3 @@ class User(AbstractUser):
     def __str__(self):
         return self.nickname or self.email
 
-    def get_username(self):
-        return self.email
-
-
-

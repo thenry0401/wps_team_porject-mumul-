@@ -1,35 +1,18 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.validators import UniqueValidator
 
+from post.serializers import PostSerializer
 from ..models import User
 
 __all__ = (
     'UserSerializer',
     'UserFastCreationSerializer',
     'UserCreationSerializer',
-    'PaginatedUserSerializer',
 )
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # def create(self, validated_data):
-    #     password = validated_data.pop('password', None)
-    #     instance = self.Meta.model(**validated_data)
-    #     if password is not None:
-    #         instance.set_password(password)
-    #     instance.save()
-    #     return instance
-
-    # user = get_user_model().objects.create(
-    #     email=validated_data['email'],
-    #     username=validated_data['username']
-    # )
-    # user.set_password(validated_data['password'])
-    # user.save()
-    # return user
 
     class Meta:
         model = User
@@ -40,6 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
             'nickname',
             'name',
             'email',
+            'profile_image',
             'user_type',
             'post_code', 'road_address', 'detail_address',
             'date_joined', 'last_login'
@@ -129,3 +113,15 @@ class PaginatedUserSerializer(PageNumberPagination):
 
     class Meta:
         object_serializer_class = UserSerializer
+
+
+class PaginatedPostSerializer(PageNumberPagination):
+    """
+    Serializes page objects of user querysets.
+    """
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+    class Meta:
+        object_serializer_class = PostSerializer
