@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from member.serializers import UserSerializer
 from ..serializers.comment import CommentSerializer
 from ..models import Post
 
@@ -10,7 +9,7 @@ __all__ = [
 ]
 
 class PostSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
+    # author = UserSerializer(read_only=True)
     comments = serializers.SerializerMethodField()
 
     class Meta:

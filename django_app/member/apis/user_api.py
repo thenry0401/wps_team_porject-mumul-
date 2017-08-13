@@ -38,10 +38,6 @@ class UserListView(generics.ListCreateAPIView):
 
 
 class UserLoginView(LoginView):
-    # throttle_classes = ()
-    # permission_classes = ()
-    # parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
-    # renderer_classes = (renderers.JSONRenderer, )
     serializer_class = UserLoginSerializer
 
     def post(self, request, *args, **kwargs):
