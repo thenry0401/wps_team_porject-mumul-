@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',  # django-rest-allauth 라이브러리
     'rest_auth',                 # django-rest-allauth 라이브러리
     'rest_auth.registration',    # django-rest-allauth 라이브러리
-    'corsheaders',
+    'corsheaders',               # CORS 라이브러리
 
     # Django App
     'member',
@@ -176,8 +176,10 @@ MIDDLEWARE = [
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
+        'localhost:8000',
         'localhost:8080',
         'mulmul.xyz',
+        'api.mulmul.xyz',
 )
 
 ROOT_URLCONF = 'config.urls'

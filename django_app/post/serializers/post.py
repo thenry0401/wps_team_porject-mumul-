@@ -7,8 +7,8 @@ __all__ = (
     'PostSimpleInfoSerializer',
 )
 
-
 class PostSerializer(serializers.ModelSerializer):
+
     class Meta:
             model = Post
 
