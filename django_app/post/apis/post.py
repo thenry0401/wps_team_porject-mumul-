@@ -1,12 +1,9 @@
-from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from member.CustomBasicAuthentication import CustomBasicAuthenticationWithEmail
 from utils import ObjectIsRequestUser
 from ..serializers import PostSerializer
 from ..models import Post
@@ -19,8 +16,7 @@ __all__ = (
 )
 
 
-class PostListCreateView_origin(APIView):
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+class PostListCreateView(APIView):
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
@@ -39,18 +35,7 @@ class PostListCreateView_origin(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PostListCreateView(generics.ListCreateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        ObjectIsRequestUser
-    )
-
-
-class PostDetailView_origin(APIView):
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
+class PostDetailView(APIView):
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
@@ -81,18 +66,7 @@ class PostDetailView_origin(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        ObjectIsRequestUser
-    )
-
-
 class PostLikeToggleView(APIView):
-    authentication_classes = (CustomBasicAuthenticationWithEmail,)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser

@@ -7,7 +7,6 @@ from ..models import User
 
 __all__ = (
     'UserSerializer',
-    'UserFastCreationSerializer',
     'UserCreationSerializer',
 )
 
@@ -28,29 +27,6 @@ class UserSerializer(serializers.ModelSerializer):
             'post_code', 'road_address', 'detail_address',
             'date_joined', 'last_login'
         )
-
-
-class UserFastCreationSerializer(serializers.Serializer):
-    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
-    password1 = serializers.CharField(write_only=True)
-    password2 = serializers.CharField(write_only=True)
-
-    def validate_username(self, email):
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError("중복되는 이메일이 존재합니다.")
-        return email
-
-    def validate(self, data):
-        if data['password1'] != data['password2']:
-            raise serializers.ValidationError('비밀번호가 서로 일치하지 않습니다.')
-        return data
-
-    def save(self, *args, **wargs):
-        user = User.objects.create_user(
-            email=self.validated_data.get('email', ''),
-            password=self.validated_data.get('password1', ''),
-        )
-        return user
 
 
 class UserCreationSerializer(serializers.ModelSerializer):

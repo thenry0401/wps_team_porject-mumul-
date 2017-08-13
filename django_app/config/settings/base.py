@@ -21,7 +21,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 # .config_secret폴더 및 하위 파일 경로
 CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, '.config_secret')
 CONFIG_SECRET_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_common.json')
-CONFIG_SECRET_DEBUG_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_debug.json')
+CONFIG_SECRET_DEBUG_FILE  = os.path.join(CONFIG_SECRET_DIR, 'settings_debug.json')
 CONFIG_SECRET_DEPLOY_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_deploy.json')
 
 # config_secret변수에 CONFIG_SECRET_COMMON_FILE경로의 파일을 읽은 값을
@@ -56,12 +56,15 @@ INSTALLED_APPS = [
     # The following apps are required:
     'django.contrib.sites',
 
+    # Third Party Library
     'django_extensions',
     'rest_framework',            # django-restframework 라이브러리
     'rest_framework.authtoken',  # django-rest-allauth 라이브러리
     'rest_auth',                 # django-rest-allauth 라이브러리
     'rest_auth.registration',    # django-rest-allauth 라이브러리
+    'corsheaders',               # CORS 라이브러리
 
+    # Django App
     'member',
     'post',
     'utils',
@@ -95,8 +98,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # ACCOUNT_EMAIL_REQUIRED = True
 
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None # allauth에게 username 필드가 없음을 알린다.
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'nickname'
-ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = 'nickname'
+# ACCOUNT_USERNAME_REQUIRED = False
 
 ## 소셜 계정으로 가입하는 경우 추가 정보를 기입하기 위한 설정입니다.
 # SOCIALACCOUNT_ADAPTER = 'member.views.SocialAccountAdapter'
@@ -104,7 +107,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 # SOCIALACCOUNT_AUTO_SIGNUP = True
 
 ## 커스텀 SignUp 폼을 사용합니다.
-ACCOUNT_SIGNUP_FORM_CLASS = 'member.forms.UserSignUpForm'
+# ACCOUNT_SIGNUP_FORM_CLASS = 'member.forms.UserSignUpForm'
 
 
 SOCIALACCOUNT_PROVIDERS = \
@@ -130,21 +133,14 @@ SOCIALACCOUNT_PROVIDERS = \
           'VERSION': 'v2.4'},
      }
 
-AUTHENTICATION_BACKENDS = (
-    # eeded to login by username in Django admin, regardless of `allauth'
-    # 'django.contrib.auth.backends.ModelBackend',
-    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-    'member.CustomBasicAuthentication.CustomBasicAuthenticationWithEmail',
-
-)
 # REST-AUTH 에서 로그인 시리얼 라이저는 커스텀(email 필드 제거)한 시리얼라이저를 사용합니다.
 REST_AUTH_SERIALIZERS = {
-    'LOGIN_SERIALIZER': 'member.serializers.user_login_serializers.UserLoginSerializer', }
+    'LOGIN_SERIALIZER': 'member.serializers.user_login_serializers.UserLoginSerializer',
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
@@ -155,11 +151,13 @@ REST_FRAMEWORK = {
     # 'MAX_PAGINATE_BY': 100             # Maximum limit allowed when using `?page_size=xxx`.
 
 }
-
-
 ######### django-rest-auth configuration end #########
 
+
 MIDDLEWARE = [
+    # django-cors-headers
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -168,6 +166,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+        'localhost:8000',
+        'localhost:8080',
+        'mulmul.xyz',
+        'api.mulmul.xyz',
+)
 
 ROOT_URLCONF = 'config.urls'
 
