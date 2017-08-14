@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from post.models.others import Tag
 from utils import ObjectIsRequestUser
 from ..serializers import PostSerializer
 from ..models import Post
@@ -13,6 +14,7 @@ __all__ = (
     'PostDetailView',
     'PostLikeToggleView',
     'PostSearchView',
+    'HashtagPostListView',
 )
 
 
@@ -90,3 +92,18 @@ class PostLikeToggleView(APIView):
 
 class PostSearchView(APIView):
     pass
+
+
+class HashtagPostListView(APIView):
+
+    def get_object(self, tag_name):
+        try:
+            return Tag.objects.get(name=tag_name)
+        except Tag.DoesNotExist:
+            raise Http404
+
+    def get(self, request, tag_name):
+        tag = self.get_object(tag_name)
+        posts = Post.objects.filter(comment__tags=tag)
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
