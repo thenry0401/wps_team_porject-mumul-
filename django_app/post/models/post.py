@@ -1,3 +1,4 @@
+import re
 from django.conf import settings
 from django.db import models
 from post.models.others import Tag
@@ -16,6 +17,7 @@ class Post(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag)
+    html_content = models.TextField(blank=True)
     like_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='PostLike',
@@ -61,6 +63,19 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        p = re.compile(r'(#\w+)')
+        tag_name_list = re.findall(p, self.content)
+        ori_content = self.content
+        for tag_name in tag_name_list:
+            tag, _ = Tag.objects.get_or_create(name=tag_name.replace('#', ''))
+            change_tag = '<a href="">{}</a>'.format(tag_name)
+            ori_content = re.sub(r'{}(?![<\w])'.format(tag_name), change_tag, ori_content, count=1)
+            if not self.tags.filter(pk=tag.pk).exists():
+                self.tags.add(tag)
+        self.html_content = ori_content
+        super().save(*args, **kwargs)
 
 
 class PostLike(models.Model):
@@ -72,3 +87,5 @@ class PostLike(models.Model):
         unique_together = (
             ('post', 'user'),
         )
+
+
