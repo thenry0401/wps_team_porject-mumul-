@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from rest_framework.pagination import PageNumberPagination
 
+from member.serializers import UserSerializer
 from ..serializers.comment import CommentSerializer
 from ..models import Post
 
@@ -10,7 +12,7 @@ __all__ = [
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.SerializerMethodField()
+    author = UserSerializer()
     comments = serializers.SerializerMethodField()
 
     class Meta:
@@ -68,3 +70,14 @@ class PostSimpleInfoSerializer(serializers.ModelSerializer):
             'category',
             'trading_type',
         )
+
+class PaginatedPostSerializer(PageNumberPagination):
+    """
+    Serializes page objects of user querysets.
+    """
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+    class Meta:
+        object_serializer_class = PostSerializer

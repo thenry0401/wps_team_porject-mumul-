@@ -2,7 +2,6 @@ from rest_framework import serializers
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.validators import UniqueValidator
 
-from post.serializers import PostSerializer
 from ..models import User
 
 __all__ = (
@@ -91,13 +90,4 @@ class PaginatedUserSerializer(PageNumberPagination):
         object_serializer_class = UserSerializer
 
 
-class PaginatedPostSerializer(PageNumberPagination):
-    """
-    Serializes page objects of user querysets.
-    """
-    page_size = 10
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
 
-    class Meta:
-        object_serializer_class = PostSerializer
