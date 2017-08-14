@@ -41,9 +41,6 @@ class PostSerializer(serializers.ModelSerializer):
             'author',
         )
 
-    def get_author(self, obj):
-        return obj.author.name
-
     def get_comments(self, obj):
         ordered_queryset = obj.comment_set.order_by('-pk')
         return CommentSerializer(ordered_queryset, many=True).data
