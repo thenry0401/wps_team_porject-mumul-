@@ -64,18 +64,21 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        ori_content = self.content
-        self.html_content = ori_content
         super().save(*args, **kwargs)
+        self.make_html_content_and_add_tags()
+
+    def make_html_content_and_add_tags(self):
         p = re.compile(r'(#\w+)')
         tag_name_list = re.findall(p, self.content)
+        ori_content = self.content
         for tag_name in tag_name_list:
             tag, _ = Tag.objects.get_or_create(name=tag_name.replace('#', ''))
             change_tag = '<a href="">{}</a>'.format(tag_name)
             ori_content = re.sub(r'{}(?![<\w])'.format(tag_name), change_tag, ori_content, count=1)
             if not self.tags.filter(pk=tag.pk).exists():
                 self.tags.add(tag)
-
+        self.html_content = ori_content
+        super().save(update_fields=['html_content'])
 
 class PostLike(models.Model):
     post = models.ForeignKey(Post)
