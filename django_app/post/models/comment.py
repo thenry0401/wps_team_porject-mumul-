@@ -25,6 +25,10 @@ class Comment(models.Model):
     html_content = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.make_html_content_and_add_tags()
+
+    def make_html_content_and_add_tags(self):
         p = re.compile(r'(#\w+)')
         tag_name_list = re.findall(p, self.content)
         ori_content = self.content
@@ -35,4 +39,4 @@ class Comment(models.Model):
             if not self.tags.filter(pk=tag.pk).exists():
                 self.tags.add(tag)
         self.html_content = ori_content
-        super().save(*args, **kwargs)
+        super().save(update_fields=['html_content'])

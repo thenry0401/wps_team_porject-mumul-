@@ -42,7 +42,7 @@ class CommentListCreateView(APIView):
 class CommentDetailView(APIView):
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
-        ObjectIsRequestUser
+        ObjectIsRequestUser,
     )
 
     def get_object(self, post_pk, comment_pk):

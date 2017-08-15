@@ -16,7 +16,6 @@ class CommentSerializer(serializers.ModelSerializer):
         )
 
         read_only_fields = (
-            'post',
             'author',
         )
 
