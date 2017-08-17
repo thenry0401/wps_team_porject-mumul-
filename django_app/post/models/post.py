@@ -29,8 +29,13 @@ class Post(models.Model):
     road_address = models.CharField(max_length=100, blank=True, null=True)
     detail_address = models.CharField(max_length=100, blank=True, null=True)
 
+    # 매물 등록 여부
+    for_sale = models.BooleanField(default=False)
+    for_sale_created_date = models.DateTimeField(auto_now=True, blank=True, null=True)
+
     # 판매 여부
     is_sold = models.BooleanField(default=False)
+
     # 교환 횟수 카운트
     exchange_count = models.IntegerField(default=0)
 
@@ -67,6 +72,7 @@ class Post(models.Model):
         super().save(*args, **kwargs)
         self.make_html_content_and_add_tags()
 
+    # 태그 생성
     def make_html_content_and_add_tags(self):
         p = re.compile(r'(#\w+)')
         tag_name_list = re.findall(p, self.content)
@@ -79,6 +85,16 @@ class Post(models.Model):
                 self.tags.add(tag)
         self.html_content = ori_content
         super().save(update_fields=['html_content'])
+
+    # 매물 등록
+    def make_for_sale(self):
+        if not self.for_sale:
+            self.for_sale = True
+            self.save()
+        else:
+            self.for_sale = False
+            self.save()
+
 
 class PostLike(models.Model):
     post = models.ForeignKey(Post)

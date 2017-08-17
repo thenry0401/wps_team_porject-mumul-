@@ -15,6 +15,7 @@ __all__ = (
     'PostLikeToggleView',
     'PostSearchView',
     'HashtagPostListView',
+    'ForSaleToggleView',
 )
 
 
@@ -25,7 +26,7 @@ class PostListCreateView(APIView):
     )
 
     def get(self, request, *args, **kwargs):
-        posts = Post.objects.all()
+        posts = Post.objects.filter(for_sale=True)
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
@@ -87,7 +88,10 @@ class PostLikeToggleView(APIView):
         )
         if not post_like_created:
             post_like.delete()
-        return Response({'created': post_like_created})
+        if post_like_created:
+            return Response('위시리스트에 추가 되었습니다.')
+        else:
+            return Response('위시리스트에서 제거되었습니다.')
 
 
 class PostSearchView(APIView):
@@ -107,3 +111,20 @@ class HashtagPostListView(APIView):
         posts = Post.objects.filter(comment__tags=tag)
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
+
+
+class ForSaleToggleView(APIView):
+
+    def get_object(self, post_pk):
+        try:
+            return Post.objects.get(pk=post_pk)
+        except Post.DoesNotExist:
+            return Http404
+
+    def get(self, request, post_pk):
+        post = self.get_object(post_pk)
+        post.make_for_sale()
+        if post.for_sale:
+            return Response('매물이 등록되었습니다.')
+        else:
+            return Response('매물이 해제되었습니다.')

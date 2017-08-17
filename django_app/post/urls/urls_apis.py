@@ -16,4 +16,7 @@ urlpatterns = [
 
     # ##### 위시리스트 추가/삭제 #####
     url(r'^(?P<post_pk>[0-9]+)/wish-list/toggle/$', apis.PostLikeToggleView.as_view(), name='wishlist-toggle'),
+
+    #### 매물 등록/삭제
+    url(r'^(?P<post_pk>[0-9]+)/for-sale/toggle/$', apis.ForSaleToggleView.as_view(), name='for_sale_toggle'),
 ]
