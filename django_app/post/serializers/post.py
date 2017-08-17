@@ -8,11 +8,12 @@ from ..models import Post
 __all__ = [
     'PostSerializer',
     'PostSimpleInfoSerializer',
+    'PaginatedPostSerializer',
 ]
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = UserSerializer()
+    author = UserSerializer(read_only=True)
     comments = serializers.SerializerMethodField()
 
     class Meta:
@@ -67,6 +68,7 @@ class PostSimpleInfoSerializer(serializers.ModelSerializer):
             'category',
             'trading_type',
         )
+
 
 class PaginatedPostSerializer(PageNumberPagination):
     """
