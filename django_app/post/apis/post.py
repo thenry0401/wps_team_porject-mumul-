@@ -66,7 +66,7 @@ class PostDetailView(APIView):
     def delete(self, request, post_pk):
         post = self.get_object(post_pk)
         post.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"status": status.HTTP_204_NO_CONTENT, "message": '삭제되었습니다.'})
 
 
 class PostLikeToggleView(APIView):
