@@ -6,9 +6,9 @@ urlpatterns = [
     url(r'^list/$', apis.PostListCreateView.as_view(), name='post_list'),
     url(r'^tag/(?P<tag_name>\w+)/$', apis.HashtagPostListView.as_view(), name='hashtag_post_list'),
     url(r'^create/$', apis.PostListCreateView.as_view(), name='post_create'),
-    url(r'^(?P<post_pk>\d+)/', apis.PostDetailView.as_view(), name='post_detail'),
-    url(r'^(?P<post_pk>\d+)/modify/', apis.PostDetailView.as_view(), name='post_modify'),
-    url(r'^(?P<post_pk>\d+)/delete/', apis.PostDetailView.as_view(), name='post_delete'),
+    url(r'^(?P<post_pk>\d+)/$', apis.PostDetailView.as_view(), name='post_detail'),
+    url(r'^(?P<post_pk>\d+)/modify/$', apis.PostDetailView.as_view(), name='post_modify'),
+    url(r'^(?P<post_pk>\d+)/delete/$', apis.PostDetailView.as_view(), name='post_delete'),
 
 
     url(r'^(?P<post_pk>\d+)/comment/create/$', apis.CommentListCreateView.as_view(), name='comment_create'),
