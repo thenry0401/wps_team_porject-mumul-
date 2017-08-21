@@ -18,6 +18,7 @@ __all__ = (
 class Comment(models.Model):
     post = models.ForeignKey(Post)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
+    # my_posts = models.ForeignKey(Post, related_name='my_posts', blank=True, null=True)
     content = models.CharField(max_length=30, blank=False)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
