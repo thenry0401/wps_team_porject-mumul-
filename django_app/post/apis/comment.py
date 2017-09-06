@@ -67,4 +67,4 @@ class CommentDetailView(APIView):
     def delete(self, request, post_pk, comment_pk):
         comment = self.get_object(post_pk, comment_pk)
         comment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"status": status.HTTP_204_NO_CONTENT, "message": '삭제되었습니다.'})
