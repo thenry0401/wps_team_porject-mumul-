@@ -107,3 +107,7 @@ class PostLike(models.Model):
         )
 
 
+class Exchange(models.Model):
+    post_item = models.ForeignKey(Post, related_name='post_item')
+    comment_item = models.ForeignKey(Post, related_name='comment_item')
+

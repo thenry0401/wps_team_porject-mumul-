@@ -5,9 +5,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from post.models.others import Tag
+from post.models.post import Exchange
 from utils import ObjectIsRequestUser
 from ..serializers import PostSerializer
-from ..models import Post
+from ..models import Post, Comment
 
 __all__ = (
     'PostListCreateView',
@@ -16,6 +17,7 @@ __all__ = (
     'PostSearchView',
     'HashtagPostListView',
     'ForSaleToggleView',
+    'MatchingItemsView',
 )
 
 
@@ -128,3 +130,28 @@ class ForSaleToggleView(APIView):
             return Response('매물이 등록되었습니다.')
         else:
             return Response('매물이 해제되었습니다.')
+
+
+class MatchingItemsView(APIView):
+
+    def get_post_object(self, post_pk):
+        try:
+            return Post.objects.get(pk=post_pk)
+        except Post.DoesNotExist:
+            return Http404
+
+    def get_comment_object(self, comment_pk):
+        try:
+            return Comment.objects.get(pk=comment_pk)
+        except Comment.DoesNotExist:
+            return Http404
+
+    def post(self, request, post_pk, comment_pk):
+        post_item = self.get_post_object(post_pk)
+        comment_item = self.get_comment_object(comment_pk)
+        exchange = Exchange.objects.create(
+            post_item=post_item,
+            comment_item=comment_item,
+        )
+        exchange.save()
+

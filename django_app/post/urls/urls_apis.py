@@ -21,4 +21,7 @@ urlpatterns = [
 
     #### 매물 등록/삭제
     url(r'^(?P<post_pk>[0-9]+)/for-sale/toggle/$', apis.ForSaleToggleView.as_view(), name='for_sale_toggle'),
+
+    #### 매물 매칭하기
+    url(r'^(?P<post_pk>[0-9]+)/(?P<comment_pk>[0-9]+)/matching-item/$', apis.MatchingItemsView.as_view(), name='matching_items'),
 ]

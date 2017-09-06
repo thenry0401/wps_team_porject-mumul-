@@ -9,6 +9,7 @@ __all__ = [
     'PostSerializer',
     'PostSimpleInfoSerializer',
     'PaginatedPostSerializer',
+    'MatchingItemsSerializer',
 ]
 
 
@@ -80,3 +81,20 @@ class PaginatedPostSerializer(PageNumberPagination):
 
     class Meta:
         object_serializer_class = PostSerializer
+
+
+class MatchingItemsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = (
+            'pk',
+            'author',
+            'title',
+            'photo',
+            'content',
+            'trading_type',
+            'post_code',
+            'road_address',
+            'detail_address',
+        )
