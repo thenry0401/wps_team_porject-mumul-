@@ -16,6 +16,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = (
+            'pk',
             'post',
             'author',
             'my_posts',
@@ -32,13 +33,11 @@ class CommentSerializer(serializers.ModelSerializer):
         serializer = MyPostsSerializer(post, many=True)
         return serializer.data
 
-
     def get_post(self, obj):
         return obj.post.title
 
 
 class MyPostsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Post
         fields = (
