@@ -18,7 +18,6 @@ __all__ = (
 class Comment(models.Model):
     post = models.ForeignKey(Post)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
-    # my_posts = models.ForeignKey(Post, related_name='my_posts', blank=True, null=True)
     content = models.CharField(max_length=30, blank=False)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
@@ -28,6 +27,7 @@ class Comment(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.make_html_content_and_add_tags()
+        self.match_post()
 
     def make_html_content_and_add_tags(self):
         p = re.compile(r'(#\w+)')
@@ -41,3 +41,17 @@ class Comment(models.Model):
                 self.tags.add(tag)
         self.html_content = ori_content
         super().save(update_fields=['html_content'])
+
+    def match_post(self):
+        comment = Comment.objects.get(pk=self.pk)
+        MyPostInComment.objects.create(
+            original_post=self.post,
+            comment=comment,
+            # matched_post=,
+        )
+
+
+class MyPostInComment(models.Model):
+    original_post = models.ForeignKey(Post)
+    comment = models.ForeignKey(Comment)
+    # matched_post = models.ForeignKey(Post)
