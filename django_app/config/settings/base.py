@@ -68,6 +68,10 @@ INSTALLED_APPS = [
     'member',
     'post',
     'utils',
+
+
+    ## django-rest-swagger ##
+    'rest_framework_swagger',
 ]
 
 ######### djang-allauth configuration start#########
