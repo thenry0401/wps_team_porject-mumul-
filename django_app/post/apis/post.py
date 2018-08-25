@@ -101,7 +101,6 @@ class PostSearchView(APIView):
 
 
 class HashtagPostListView(APIView):
-
     def get_object(self, tag_name):
         try:
             return Tag.objects.get(name=tag_name)
@@ -116,7 +115,6 @@ class HashtagPostListView(APIView):
 
 
 class ForSaleToggleView(APIView):
-
     def get_object(self, post_pk):
         try:
             return Post.objects.get(pk=post_pk)
@@ -133,7 +131,6 @@ class ForSaleToggleView(APIView):
 
 
 class MatchingItemsView(APIView):
-
     def get_post_object(self, post_pk):
         try:
             return Post.objects.get(pk=post_pk)
@@ -154,4 +151,3 @@ class MatchingItemsView(APIView):
             comment_item=comment_item,
         )
         exchange.save()
-
