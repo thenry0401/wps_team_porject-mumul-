@@ -11,7 +11,8 @@ from ..serializers import PostSerializer
 from ..models import Post, Comment
 
 __all__ = (
-    'PostListCreateView',
+    'PostListView',
+    'PostCreateView',
     'PostDetailView',
     'PostLikeToggleView',
     'PostSearchView',
@@ -21,16 +22,23 @@ __all__ = (
 )
 
 
-class PostListCreateView(APIView):
+class PostListView(APIView):
+    def get(self, request, *args, **kwargs):
+        posts = Post.objects.filter(for_sale=True)
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+
+class PostCreateView(APIView):
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
     )
 
-    def get(self, request, *args, **kwargs):
-        posts = Post.objects.filter(for_sale=True)
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
+    # def get(self, request, *args, **kwargs):
+    #     posts = Post.objects.filter(for_sale=True)
+    #     serializer = PostSerializer(posts, many=True)
+    #     return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         serializer = PostSerializer(data=request.data)
