@@ -88,9 +88,11 @@ class Post(models.Model):
 
     # 매물 등록
     def make_for_sale(self):
+        # 매물로 등록한다
         if not self.for_sale:
             self.for_sale = True
             self.save()
+        # 매물에서 해제한다
         else:
             self.for_sale = False
             self.save()
