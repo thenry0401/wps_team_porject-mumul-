@@ -1,8 +1,11 @@
 from django.http import Http404
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.schemas import SchemaGenerator
 from rest_framework.views import APIView
+from rest_framework_swagger import renderers
 
 from post.models.others import Tag
 from post.models.post import Exchange
@@ -19,6 +22,8 @@ __all__ = (
     'HashtagPostListView',
     'ForSaleToggleView',
     'MatchingItemsView',
+
+    'SwaggerSchemaView'
 )
 
 
@@ -35,15 +40,15 @@ class PostCreateView(APIView):
         ObjectIsRequestUser
     )
 
-    # def get(self, request, *args, **kwargs):
-    #     posts = Post.objects.filter(for_sale=True)
-    #     serializer = PostSerializer(posts, many=True)
-    #     return Response(serializer.data)
-
     def post(self, request, *args, **kwargs):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(author=request.user)
+            serializer.save(
+                author=request.user,
+                title=request.data,
+                content=request.data,
+
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -159,3 +164,16 @@ class MatchingItemsView(APIView):
             comment_item=comment_item,
         )
         exchange.save()
+
+
+class SwaggerSchemaView(APIView):
+    permission_classes = [AllowAny]
+    renderer_classes = [
+        renderers.OpenAPIRenderer,
+        renderers.SwaggerUIRenderer
+    ]
+
+    def get(self, request):
+        generator = SchemaGenerator()
+        schema = generator.get_schema(request=request)
+        return Response(schema)

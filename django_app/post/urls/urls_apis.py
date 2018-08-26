@@ -24,4 +24,9 @@ urlpatterns = [
 
     #### 매물 매칭하기
     url(r'^(?P<post_pk>[0-9]+)/(?P<comment_pk>[0-9]+)/matching-item/$', apis.MatchingItemsView.as_view(), name='matching_items'),
+
+
+
+    #### Swagger Schema View ###
+    url(r'^swagger/$', apis.SwaggerSchemaView.as_view(), name='swagger_schema_view'),
 ]
