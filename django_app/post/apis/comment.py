@@ -10,12 +10,12 @@ from post.serializers import CommentSerializer
 from utils import ObjectIsRequestUser
 
 __all__ = (
-    'CommentListCreateView',
-    'CommentDetailView'
+    'CommentCreateView',
+    'CommentModifyDeleteView',
 )
 
 
-class CommentListCreateView(APIView):
+class CommentCreateView(APIView):
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         ObjectIsRequestUser
@@ -39,22 +39,17 @@ class CommentListCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CommentDetailView(APIView):
+class CommentModifyDeleteView(APIView):
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
-        ObjectIsRequestUser,
+        ObjectIsRequestUser
     )
 
     def get_object(self, post_pk, comment_pk):
         try:
-            return Comment.objects.get(post__id=post_pk, pk=comment_pk)
-        except Comment.DoesNotExist:
+            return Comment.objects.get(post_id=post_pk, pk=comment_pk)
+        except:
             raise Http404
-
-    def get(self, request, post_pk, comment_pk):
-        comment = self.get_object(post_pk, comment_pk)
-        serializer = CommentSerializer(comment)
-        return Response(serializer.data)
 
     def put(self, request, post_pk, comment_pk):
         comment = self.get_object(post_pk, comment_pk)
