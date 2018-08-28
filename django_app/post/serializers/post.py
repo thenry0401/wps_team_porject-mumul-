@@ -31,6 +31,7 @@ class PostSerializer(serializers.ModelSerializer):
             'road_address',
             'detail_address',
             'comments',
+            'for_sale',
 
             'like_users',
             'is_sold',
