@@ -7,6 +7,7 @@ from rest_framework.schemas import SchemaGenerator
 from rest_framework.views import APIView
 from rest_framework_swagger import renderers
 
+from member.models import User
 from post.models.others import Tag
 from post.models.post import Exchange
 from utils import ObjectIsRequestUser
@@ -17,13 +18,14 @@ __all__ = (
     'PostListView',
     'PostCreateView',
     'PostDetailView',
+    'PostModifyDeleteView',
     'PostLikeToggleView',
-    'PostSearchView',
     'HashtagPostListView',
     'ForSaleToggleView',
     'MatchingItemsView',
 
-    'SwaggerSchemaView'
+    'SwaggerSchemaView',
+
 )
 
 
@@ -36,28 +38,20 @@ class PostListView(APIView):
 
 class PostCreateView(APIView):
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        ObjectIsRequestUser
+        permissions.IsAuthenticatedOrReadOnly
     )
+
+    serializer_class = PostSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(
-                author=request.user,
-                title=request.data,
-                content=request.data,
-
-            )
+            serializer.save(author=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PostDetailView(APIView):
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        ObjectIsRequestUser
-    )
 
     def get_object(self, post_pk):
         try:
@@ -69,6 +63,22 @@ class PostDetailView(APIView):
         post = self.get_object(post_pk)
         serializer = PostSerializer(post)
         return Response(serializer.data)
+
+
+class PostModifyDeleteView(APIView):
+    # IsAuthenticatedOrReadOnly 는 로그인 사용자에게만 write/update 권한을 주고
+    # 로그인 안한 사용자에게는 read권한만 준다
+    # ObjectIsRequestUser 는 로그인한 유저가 작성자와 일치하는지를 확인한다
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
+    def get_object(self, post_pk):
+        try:
+            return Post.objects.get(pk=post_pk)
+        except:
+            return Response({"status": status.HTTP_404_NOT_FOUND, "message": '게시물을 찾을 수 없습니다.'})
 
     def put(self, request, post_pk):
         post = self.get_object(post_pk)
@@ -86,8 +96,7 @@ class PostDetailView(APIView):
 
 class PostLikeToggleView(APIView):
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        ObjectIsRequestUser
+        permissions.IsAuthenticatedOrReadOnly
     )
 
     def get_object(self, post_pk):
@@ -98,19 +107,18 @@ class PostLikeToggleView(APIView):
 
     def get(self, request, post_pk):
         post = self.get_object(post_pk)
-        post_like, post_like_created = post.postlike_set.get_or_create(
-            user=request.user
-        )
-        if not post_like_created:
-            post_like.delete()
-        if post_like_created:
-            return Response('위시리스트에 추가 되었습니다.')
+        if post.author_id != request.user.id:
+            post_like, post_like_created = post.postlike_set.get_or_create(
+                user=request.user
+            )
+            if not post_like_created:
+                post_like.delete()
+            if post_like_created:
+                return Response('위시리스트에 추가 되었습니다.')
+            else:
+                return Response('위시리스트에서 제거되었습니다.')
         else:
-            return Response('위시리스트에서 제거되었습니다.')
-
-
-class PostSearchView(APIView):
-    pass
+            return Response('나의 게시물입니다')
 
 
 class HashtagPostListView(APIView):
@@ -128,6 +136,11 @@ class HashtagPostListView(APIView):
 
 
 class ForSaleToggleView(APIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
     def get_object(self, post_pk):
         try:
             return Post.objects.get(pk=post_pk)
@@ -136,14 +149,22 @@ class ForSaleToggleView(APIView):
 
     def get(self, request, post_pk):
         post = self.get_object(post_pk)
-        post.make_for_sale()
-        if post.for_sale:
-            return Response('매물이 등록되었습니다.')
+        if post.author_id == request.user.id:
+            post.make_for_sale()
+            if post.for_sale:
+                return Response('매물이 등록되었습니다.')
+            else:
+                return Response('매물이 해제되었습니다.')
         else:
-            return Response('매물이 해제되었습니다.')
+            return Response('내가 등록한 게시물이 아닙니다')
 
 
 class MatchingItemsView(APIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        ObjectIsRequestUser
+    )
+
     def get_post_object(self, post_pk):
         try:
             return Post.objects.get(pk=post_pk)
